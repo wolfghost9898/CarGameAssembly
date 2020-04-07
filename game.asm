@@ -1,6 +1,6 @@
 include File.asm
 include Usuario/Usuario.asm
-
+include Juego/Juego.asm
 
 ;##############################################################################
 ;########################## MOSTRAR UNA CADENA     ###################
@@ -103,7 +103,7 @@ endm
     ;##################################################### INICIAR SESION #####################################################
     ;############################################################################################################################
     Ingresar:
-        jmp juego
+        ;jmp Juego
         clearScreen
         abrirArchivo direccionUsuario
         mostrarCadena msgUsuario
@@ -200,6 +200,9 @@ endm
         mostrarCadena cabecera
         mostrarCadena msgJuego
         ingresarCaracter 
+    
+    Escenario:
+        printCalle
         
     Salir:
     ingresarCaracter
