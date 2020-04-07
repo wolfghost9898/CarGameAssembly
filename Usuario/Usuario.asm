@@ -57,3 +57,33 @@ buscarUsuario macro usuario
     fin:
 
 endm
+
+
+validarPassword macro password
+    LOCAL recursividad,fin,salto,error
+    xor bx,bx
+
+    recursividad:
+        mov cl,[password + bx]
+        cmp cl,36 
+        je salto 
+
+        cmp cl,'0'
+        jl error
+
+        cmp cl,'9'
+        jg error 
+
+        inc bx 
+        jmp recursividad
+
+    salto: 
+        mov bx,0d 
+        jmp fin
+    
+    error: 
+        mov bx,1d 
+        
+    fin:
+
+endm

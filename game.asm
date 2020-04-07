@@ -61,6 +61,7 @@ endm
         msgSesion db 10,"1) Ingresar",10,"2) Registrar",10,"3) Salir",10,"$"
         msgUsuario db 10,"Usuario: $"
         msgUsuarioError db 10,"Este usuario ya existe$"
+        msgPasswordError db 10,"La contrasenia tiene que ser numerica$"
         msgContrasenia db 10,"Contrasenia: $"
         msgOpenError db 10,"No se pudo Abrir el archivo",10,"$"
 
@@ -114,7 +115,7 @@ endm
 
         mostrarCadena msgUsuarioError
         ingresarCaracter
-        jmp Salir
+        jmp Registrar
 
 
     pedirContrasenia:
@@ -122,12 +123,18 @@ endm
         
         mostrarCadena msgContrasenia
         ingresarCadena contrasenia
-        mostrarCaracter 10
+        
+        validarPassword contrasenia + 2
+        cmp bl,0d 
+        je guardarUsuario
 
+        mostrarCadena msgPasswordError
+        ingresarCaracter
+        jmp pedirContrasenia
+
+    guardarUsuario: 
         
-        
-        
-        
+        mostrarCaracter 10
         mov al,usuario + 1
         mov ah,0
         mov tamanio,ax
