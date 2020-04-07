@@ -45,6 +45,10 @@ ingresarCadena macro variable
     mov ah,0AH               
     lea dx,variable
     int 21h
+
+    xor bx,bx 
+    mov bl,variable + 1
+    mov[variable + bx + 2],36
 endm
 
 
@@ -56,6 +60,7 @@ endm
 		"Arquitectura de computadores y ensambladores 1",10,"Carlos Eduardo Hernandez Molina",10,"201612118",10,"Seccion A",10,"$"
         msgSesion db 10,"1) Ingresar",10,"2) Registrar",10,"3) Salir",10,"$"
         msgUsuario db 10,"Usuario: $"
+        msgUsuarioError db 10,"Este usuario ya existe$"
         msgContrasenia db 10,"Contrasenia: $"
         msgOpenError db 10,"No se pudo Abrir el archivo",10,"$"
 
@@ -64,11 +69,14 @@ endm
         contrasenia db 6 DUP('$')
 
     ;################################################# ARCHIVOS ##################################################
-        filehandle dw ?
+       
+        
         direccionUsuario db "C:\p1\Usuario\db.txt",0
-        prueba db "ds$"
         tamanio dw ?
         cadena db 10 DUP("$")
+        fileSize dw 0
+        filehandle dw ?
+        buffer db 4000 dup (?), '$'
 .code
     mov ax,@data
     mov ds,ax
@@ -93,18 +101,33 @@ endm
     ;############################################################################################################################
     Registrar:
         clearScreen
-        mostrarCadena msgUsuario 
+        abrirArchivo direccionUsuario
+        mostrarCadena msgUsuario
         ingresarCadena usuario
-        mostrarCaracter 10 
+        
+        mostrarCaracter 10
+        leerArchivo
+        buscarUsuario usuario + 2
+        
+        cmp bl,0d
+        je pedirContrasenia 
+
+        mostrarCadena msgUsuarioError
+        ingresarCaracter
+        jmp Salir
+
+
+    pedirContrasenia:
+        mostrarCaracter 10
+        
         mostrarCadena msgContrasenia
         ingresarCadena contrasenia
         mostrarCaracter 10
 
-        abrirArchivo direccionUsuario
         
-        cmp bx,0d 
-        je Juego
-
+        
+        
+        
         mov al,usuario + 1
         mov ah,0
         mov tamanio,ax
@@ -120,8 +143,9 @@ endm
 
         mov cadena,10
         writeAppend cadena,1
-
+        
         cerrarArchivo
+        
         
 
     Salir:
