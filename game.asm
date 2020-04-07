@@ -59,9 +59,12 @@ endm
 		cabecera   db "Universidad de San Carlos de Guatemala",10,"Facultad de Ingenieria",10,"Ciencias y Sistemas",10,
 		"Arquitectura de computadores y ensambladores 1",10,"Carlos Eduardo Hernandez Molina",10,"201612118",10,"Seccion A",10,"$"
         msgSesion db 10,"1) Ingresar",10,"2) Registrar",10,"3) Salir",10,"$"
+        msgJuego db 10,"1) Iniciar Juego",10,"2) Cargar Juego",10,"3) Salir",10,"$"
         msgUsuario db 10,"Usuario: $"
         msgUsuarioError db 10,"Este usuario ya existe$"
+        msgUsuarioErrorN db 10,"Este usuario no existe$"
         msgPasswordError db 10,"La contrasenia tiene que ser numerica$"
+        msgPasswordErrorN db 10,"La contrasenia no coincide$"
         msgContrasenia db 10,"Contrasenia: $"
         msgOpenError db 10,"No se pudo Abrir el archivo",10,"$"
 
@@ -82,21 +85,55 @@ endm
     mov ax,@data
     mov ds,ax
     mov dx,ax 
-	Juego:
+	Login:
         clearScreen
-        mostrarCadena cabecera
         mostrarCadena msgSesion
 
         ;ingresarCaracter
-        mov bl,'2'
+        mov bl,'1'
         cmp bl,'1'
         je Ingresar 
         cmp bl,'2'
         je Registrar 
         cmp bl,'3'
         je Salir
-        jmp Juego
+        jmp Login
+    
+    ;#############################################################################################################################
+    ;##################################################### INICIAR SESION #####################################################
+    ;############################################################################################################################
     Ingresar:
+        jmp juego
+        clearScreen
+        abrirArchivo direccionUsuario
+        mostrarCadena msgUsuario
+        ingresarCadena usuario
+        
+        mostrarCaracter 10
+        leerArchivo
+        buscarUsuario usuario + 2
+        
+        cmp bl,1d
+        je ingresarContrasena 
+
+        mostrarCadena msgUsuarioErrorN
+        ingresarCaracter
+        jmp Ingresar
+    
+    ingresarContrasena:
+         mostrarCaracter 10
+        
+        mostrarCadena msgContrasenia
+        ingresarCadena contrasenia
+        
+        confirmarContra contrasenia + 2
+        cmp bl,1d 
+        je Juego
+
+        mostrarCadena msgPasswordErrorN
+        ingresarCaracter
+        jmp ingresarContrasena
+    
     ;#############################################################################################################################
     ;##################################################### REGISTRAR USUARIO #####################################################
     ;############################################################################################################################
@@ -133,7 +170,7 @@ endm
         jmp pedirContrasenia
 
     guardarUsuario: 
-        
+        pop bx
         mostrarCaracter 10
         mov al,usuario + 1
         mov ah,0
@@ -153,8 +190,17 @@ endm
         
         cerrarArchivo
         
-        
+        jmp Login
 
+    ;#############################################################################################################################
+    ;##################################################### JUEGO #####################################################
+    ;############################################################################################################################
+    Juego: 
+        clearScreen
+        mostrarCadena cabecera
+        mostrarCadena msgJuego
+        ingresarCaracter 
+        
     Salir:
     ingresarCaracter
 
