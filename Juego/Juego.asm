@@ -111,6 +111,28 @@ printCarro macro
         jmp recursividadY
 
     finY:
+    
+    ;################################### LLANTAS ############################
+    mov bx,carroI 
+    sub bx,3d
+    mov ax,154d 
+    dibujarCuadrado 255d
+
+    mov ax,176d
+    dibujarCuadrado 255d
+    mov ax,172d
+    dibujarCuadrado 255d
+
+
+    mov bx,carroF
+    sub bx,1d 
+    mov ax,154d 
+    dibujarCuadrado 255d
+    mov ax,176d
+    dibujarCuadrado 255d
+    mov ax,172d
+    dibujarCuadrado 255d
+
 
 endm
 
@@ -118,12 +140,17 @@ endm
 moverIzquierda macro
     LOCAL salir 
     mov cx,carroI 
-    cmp cx,20d 
+    cmp cx,30d 
     jle salir
 
-    sub carroI,10d 
-    sub carroF,10d
-
+    mov dx,carroF 
+    mov temp,dx 
+    
+    sub carroI,15d 
+    sub carroF,15d
+    add temp,3d
+    limpiarGrafico carroF,temp,150d,180d
+    printCarro
 
     salir:
 endm
@@ -132,13 +159,16 @@ endm
 moverDerecha macro
     LOCAL salir 
     mov cx,carroF 
-    cmp cx,300d
+    cmp cx,290d 
     jge salir
 
-    add carroI,10d 
-    add carroF,10d
-
-
+    mov dx,carroI 
+    mov temp,dx 
+    add carroI,15d 
+    add carroF,15d
+    sub temp,3d
+    limpiarGrafico temp,carroI,150d,180d
+    printCarro
     salir:
 endm
 
@@ -331,4 +361,32 @@ printNumero macro numero,columna,fila
     pop cx 
     pop bx 
     pop ax
+endm
+
+
+;################# LIMPIAR CIERTA AREA DE LA PANTALLA ###########
+limpiarGrafico macro posXI,posXF,posYI,posYF
+    LOCAL recursividadX,finX,recursividadY,finY 
+    mov bx,posXI
+    
+    recursividadX:
+        cmp bx,posXF 
+        jg finX
+
+        mov cx,posYI 
+        recursividadY:
+            cmp cx,posYF 
+            jg finY 
+            
+            pintar bx,cx,7
+
+            inc cx
+            jmp recursividadY
+        finY:
+
+        inc bx
+        jmp recursividadX
+
+
+    finX:
 endm

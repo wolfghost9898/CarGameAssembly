@@ -97,6 +97,9 @@ endm
         minutos db ? 
         segundos db ?
 
+    ;################################## OTROS ####################################
+        temp dw ?
+
         msg1 db "hello$"
 .code
     mov ax,@data
@@ -222,10 +225,9 @@ endm
         ingresarCaracter
         clearScreen 
         modoVideo
-    Escenario:
-        
         printCalle
         printCarro
+    Escenario:
         printHUD
         printObjeto 100d,100d,38d,62d
          
