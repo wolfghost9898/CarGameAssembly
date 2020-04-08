@@ -70,17 +70,17 @@ printCadena macro column,row,cadena
 
 endm
 ;###################################### MUESTRA UN CARACTER EN CIERTA POSICION ##########
-printCaracter macro column,row,caracter
-    mov  dl, column   ;Column
-    mov  dh, row   ;Row
-    mov  bh, 0    ;Display page
-    mov  ah, 02h  ;SetCursorPosition
+printCaracter macro columna,row,caracter
+    mov  dl, columna   ;Columna
+    mov  dh, row   ;Fila
+    mov  bh, 0    ;Pagina
+    mov  ah, 02h  ;Mover cursos
     int  10h
 
     mov  al, caracter
-    mov  bl, 15d  ;Color is red
-    mov  bh, 0    ;Display page
-    mov  ah, 0Eh  ;Teletype
+    mov  bl, 15d  ;Color 
+    mov  bh, 0     ;Pagina
+    mov  ah, 0Eh  
     int  10h
 endm
 
@@ -273,6 +273,61 @@ dibujarCuadrado macro color
 
     pop dx
     pop cx
+    pop bx 
+    pop ax
+endm
+
+
+;########################## DIBUJAR HUD ####################
+printHUD macro
+    printNumero minutos,73,0
+    printCaracter 75,0,":"
+    printNumero segundos,76,0
+endm
+
+
+;##################### PRINT UN NUMERO ########################
+printNumero macro numero,columna,fila
+    LOCAL decena,fin 
+
+    push ax
+    push bx 
+    push cx 
+    push dx 
+
+    xor cx,cx
+    xor dx,dx 
+    xor ax,ax 
+    xor bx,bx 
+    mov cl,numero 
+    cmp cx,10d
+    jge decena
+
+   
+    xor bx,bx 
+    printCaracter columna,fila,48d
+    add cl,48d 
+    printCaracter columna + 1,fila,cl
+    jmp fin
+    
+    decena:
+        xor cx,cx
+        xor dx,dx 
+        xor ax,ax 
+        xor bx,bx
+
+        mov al,numero 
+        mov cx,10d 
+        div cx 
+        mov cx,ax 
+        add cl,48d 
+        printCaracter columna,fila,cl
+        add ch,48d
+        printCaracter columna + 1,fila,ch 
+
+    fin:
+    pop dx 
+    pop cx 
     pop bx 
     pop ax
 endm

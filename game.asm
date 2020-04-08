@@ -94,6 +94,10 @@ endm
     ;######################################### JUEGO ###############################
         carroI dw ? 
         carroF dw ?
+        minutos db ? 
+        segundos db ?
+
+        msg1 db "hello$"
 .code
     mov ax,@data
     mov ds,ax
@@ -211,14 +215,18 @@ endm
     Juego: 
         mov carroI,145d
         mov carroF,175d
+        mov minutos,0d 
+        mov segundos,0d
         mostrarCadena cabecera
         mostrarCadena msgJuego
         ingresarCaracter
         clearScreen 
         modoVideo
     Escenario:
+        
         printCalle
         printCarro
+        printHUD
         printObjeto 100d,100d,38d,62d
         ingresarTecla
         cmp ah,4Bh
