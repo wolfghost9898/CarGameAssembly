@@ -228,20 +228,35 @@ endm
         printCarro
         printHUD
         printObjeto 100d,100d,38d,62d
-        ingresarTecla
-        cmp ah,4Bh
-        je izquierda
-        cmp ah,4Dh
+         
+        mov ah, 0bh
+        int 21h    
+        cmp al,0 
+        je refresco
+
+        mov ah,0
+        int 16h
+        cmp AH, 4Dh     
         je derecha
+        
+        cmp AH, 4Bh     
+        je izquierda
 
         jmp fin
 
     izquierda:
         moverIzquierda       
-        jmp Escenario
+        jmp refresco
         
     derecha: 
         moverDerecha       
+        jmp refresco
+
+    refresco:
+        delay 1000d
+        inc segundos 
+        cmp segundos,60d 
+        jg fin
         jmp Escenario
     fin:
     mov ax,3h

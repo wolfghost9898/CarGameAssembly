@@ -319,7 +319,8 @@ printNumero macro numero,columna,fila
         mov al,numero 
         mov cx,10d 
         div cx 
-        mov cx,ax 
+        mov cl,al 
+        mov ch,dl
         add cl,48d 
         printCaracter columna,fila,cl
         add ch,48d
