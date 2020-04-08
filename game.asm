@@ -52,6 +52,15 @@ ingresarCadena macro variable
 endm
 
 
+;##############################################################################
+;########################## DETECTAR UNA TECLA  ###################
+;##############################################################################
+ingresarTecla macro
+    mov ah,00h 
+    int 16h
+endm
+
+
 .model small
 .stack 
 .data
@@ -81,6 +90,10 @@ endm
         fileSize dw 0
         filehandle dw ?
         buffer db 4000 dup (?), '$'
+
+    ;######################################### JUEGO ###############################
+        carroI dw ? 
+        carroF dw ?
 .code
     mov ax,@data
     mov ds,ax
@@ -103,7 +116,7 @@ endm
     ;##################################################### INICIAR SESION #####################################################
     ;############################################################################################################################
     Ingresar:
-        ;jmp Juego
+        jmp Juego
         clearScreen
         abrirArchivo direccionUsuario
         mostrarCadena msgUsuario
@@ -196,17 +209,39 @@ endm
     ;##################################################### JUEGO #####################################################
     ;############################################################################################################################
     Juego: 
-        clearScreen
+        mov carroI,145d
+        mov carroF,175d
         mostrarCadena cabecera
         mostrarCadena msgJuego
-        ingresarCaracter 
-    
+        ingresarCaracter
+        clearScreen 
+        modoVideo
     Escenario:
         printCalle
+        printCarro
+        printObjeto 100d,100d,38d,62d
+        ingresarTecla
+        cmp ah,4Bh
+        je izquierda
+        cmp ah,4Dh
+        je derecha
+
+        jmp fin
+
+    izquierda:
+        moverIzquierda       
+        jmp Escenario
+        
+    derecha: 
+        moverDerecha       
+        jmp Escenario
+    fin:
+    mov ax,3h
+    int 10h
         
     Salir:
     ingresarCaracter
-
+    
     mov   ax,4c00h       
     int   21h
 
