@@ -390,3 +390,183 @@ limpiarGrafico macro posXI,posXF,posYI,posYF
 
     finX:
 endm
+
+;##################### RECORRE LA LISTA DE OBJETOS Y LAS IMPRIME######################3
+recorrerObjetos macro
+    LOCAL recursividad,fin,verde,salto
+    push ax 
+    push bx 
+    push cx 
+    push dx 
+
+    xor ax,ax
+    mov al,cantObjetos
+    mov bx,3d 
+    mul bx
+    mov bx,0d 
+    recursividad:
+        cmp bx,ax
+        jge fin 
+        
+        xor cx,cx 
+        xor dx,dx
+        cmp [objetos + bx],0d
+        je verde 
+
+        inc bx 
+        mov cl,[objetos + bx]
+        inc bx
+        mov dl,[objetos + bx]
+        printObjeto cx,dx,67d,68d
+
+        jmp salto
+
+        verde:
+            inc bx
+            mov cl,[objetos + bx]
+            inc bx
+            mov dl,[objetos + bx]
+            printObjeto cx,dx,2d,70d
+        
+        salto:
+
+        inc bx
+        jmp recursividad
+    
+    fin:
+
+
+
+    pop ax 
+    pop bx 
+    pop cx
+    pop dx
+endm
+
+
+;##################### MUEVE TODOS LOS OBJETOS Y LIMPIA EL ANTERIOR ######################3
+moverObjetos macro
+    LOCAL recursividad,fin,verde
+    push ax 
+    push bx 
+    push cx 
+    push dx 
+
+    xor ax,ax
+    mov al,cantObjetos
+    mov bx,3d 
+    mul bx
+    mov bx,0d 
+    recursividad:
+        cmp bx,ax
+        jge fin 
+        
+        push ax 
+        xor cx,cx 
+        xor dx,dx
+        
+        inc bx 
+        mov cl,[objetos + bx]
+        inc bx
+        push bx 
+        mov dl,[objetos + bx]
+        
+
+        mov ax,cx 
+        add ax,20d
+        sub cx,20d 
+        mov temp,dx 
+        sub temp,20d
+        
+        limpiarGrafico cx,ax,temp,dx 
+        pop bx
+        xor ax,ax 
+        mov al,[objetos + bx]
+        add ax,5d 
+        mov [objetos + bx],al
+
+        pop ax
+        inc bx 
+        jmp recursividad
+    
+    fin:
+
+
+
+    pop ax 
+    pop bx 
+    pop cx
+    pop dx
+endm
+
+;#################### SI YA LLEGO EL ULTIMO AL BORDE LO SACAMOS ###########################
+popObjetos macro
+    LOCAL fin,recursividad,eliminar
+    
+    cmp cantObjetos,0d
+    jle fin 
+
+    xor ax,ax
+    mov al,[objetos + 2]
+    cmp ax,175d 
+    jle fin
+    
+    xor ax,ax
+    xor bx,bx 
+
+
+    mov al,[objetos + 1]
+
+    mov temp,ax 
+    add temp,4d 
+
+
+    limpiarGrafico ax,temp,175d,180d 
+
+    xor ax,ax
+    xor bx,bx 
+    
+    mov al,cantObjetos
+    mov bx,3d 
+    mul bx 
+    xor cx,cx
+    mov bx,3d
+    dec cantObjetos
+
+    recursividad:
+        cmp bx,ax 
+        jge fin 
+
+        mov dl,[objetos + bx]
+        push bx 
+        mov bx,cx
+        mov [objetos + bx],dl 
+        pop bx 
+
+        inc bx 
+        inc cx
+        mov dl,[objetos + bx]
+        push bx 
+        mov bx,cx
+        mov [objetos + bx],dl 
+        pop bx
+
+        inc bx 
+        inc cx
+        mov dl,[objetos + bx]
+        push bx 
+        mov bx,cx
+        mov [objetos + bx],dl 
+        pop bx  
+
+        inc bx 
+        jmp recursividad        
+    
+        
+
+    
+    
+
+    fin:
+
+endm

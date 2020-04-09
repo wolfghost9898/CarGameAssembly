@@ -96,6 +96,8 @@ endm
         carroF dw ?
         minutos db ? 
         segundos db ?
+        objetos db 99 DUP(0)
+        cantObjetos db 2 DUP(0)
 
     ;################################## OTROS ####################################
         temp dw ?
@@ -220,6 +222,16 @@ endm
         mov carroF,175d
         mov minutos,0d 
         mov segundos,0d
+
+        mov cantObjetos,2d 
+        mov [objetos + 0],0d 
+        mov [objetos + 1],255d
+        mov [objetos + 2],100d
+
+        mov [objetos + 3],1d 
+        mov [objetos + 4],100d
+        mov [objetos + 5],20d
+
         mostrarCadena cabecera
         mostrarCadena msgJuego
         ingresarCaracter
@@ -229,7 +241,7 @@ endm
         printCarro
     Escenario:
         printHUD
-        printObjeto 100d,100d,38d,62d
+        recorrerObjetos
          
         mov ah, 0bh
         int 21h    
@@ -255,7 +267,11 @@ endm
         jmp refresco
 
     refresco:
+        
         delay 1000d
+        moverObjetos
+        popObjetos
+        
         inc segundos 
         cmp segundos,60d 
         jg fin
