@@ -99,6 +99,12 @@ endm
         objetos db 99 DUP(0)
         cantObjetos db 2 DUP(0)
 
+        tiempoAmarillo db 1 DUP(0)
+        tiempoVerde db 1 DUP(0)
+
+        tiempoAmarilloTemp db 1 DUP(0)
+        tiempoVerdeTemp db 1 DUP(0)
+
     ;################################## OTROS ####################################
         temp dw ?
 
@@ -222,15 +228,9 @@ endm
         mov carroF,175d
         mov minutos,0d 
         mov segundos,0d
+        mov cantObjetos,0d
+        mov tiempoAmarillo,10d
 
-        mov cantObjetos,2d 
-        mov [objetos + 0],0d 
-        mov [objetos + 1],255d
-        mov [objetos + 2],100d
-
-        mov [objetos + 3],1d 
-        mov [objetos + 4],100d
-        mov [objetos + 5],20d
 
         mostrarCadena cabecera
         mostrarCadena msgJuego
@@ -239,10 +239,12 @@ endm
         modoVideo
         printCalle
         printCarro
+    
     Escenario:
         printHUD
         recorrerObjetos
-         
+        generarObstaculos
+
         mov ah, 0bh
         int 21h    
         cmp al,0 
@@ -271,7 +273,9 @@ endm
         delay 1000d
         moverObjetos
         popObjetos
-        
+        choque
+        inc tiempoAmarilloTemp
+        inc tiempoVerdeTemp
         inc segundos 
         cmp segundos,60d 
         jg fin

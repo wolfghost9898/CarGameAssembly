@@ -482,7 +482,7 @@ moverObjetos macro
         pop bx
         xor ax,ax 
         mov al,[objetos + bx]
-        add ax,5d 
+        add ax,10d  ; Velocidad de desplazamiento
         mov [objetos + bx],al
 
         pop ax
@@ -523,6 +523,73 @@ popObjetos macro
 
     limpiarGrafico ax,temp,175d,180d 
 
+    makePop
+
+    
+    
+
+    fin:
+
+endm
+
+
+
+;#################### SI YA LLEGO EL ULTIMO AL BORDE LO SACAMOS ###########################
+choque macro
+    LOCAL fin,recursividad,eliminar
+    
+    cmp cantObjetos,0d
+    jle fin 
+
+    xor ax,ax
+    mov al,[objetos + 2]
+    
+    cmp ax,150d 
+    jle fin
+    
+
+    xor ax,ax
+    mov al,[objetos + 1]
+    add ax,12d
+    cmp ax,carroI 
+    jl fin 
+
+    xor ax,ax 
+    mov al,[objetos + 1]
+    sub ax,8d 
+    cmp ax,carroF
+    jg fin
+
+   
+
+
+
+
+    xor ax,ax
+    xor bx,bx 
+
+
+    mov al,[objetos + 1]
+
+    mov temp,ax 
+    add temp,4d 
+
+
+    limpiarGrafico ax,temp,120d,160d 
+
+    makePop
+        
+
+    
+    
+
+    fin:
+
+endm
+
+;################################# SACAMOS AL INICIO UN OBSTACULO
+makePop macro
+    LOCAL recursividad,fin
     xor ax,ax
     xor bx,bx 
     
@@ -560,13 +627,40 @@ popObjetos macro
         pop bx  
 
         inc bx 
-        jmp recursividad        
-    
-        
+        jmp recursividad  
+    fin:      
+     
+endm
 
+generarObstaculos macro
+    LOCAL fin
+    push ax
+    push bx
+    xor ax,ax 
+    mov al,tiempoAmarilloTemp 
+
+    cmp al,tiempoAmarillo 
+    jl fin
+
+    xor ax,ax 
+    mov al,cantObjetos 
+    mov bx,3d 
+    mul bx 
+
+    mov bx,ax 
+
+    mov [objetos + bx],0d 
+    inc bx 
+    mov [objetos + bx],100d
+    inc bx 
+    mov [objetos + bx],40d
     
-    
+    mov tiempoAmarilloTemp,0d
+    inc cantObjetos
+
 
     fin:
 
+    pop bx
+    pop ax
 endm
