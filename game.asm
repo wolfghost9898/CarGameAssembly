@@ -229,7 +229,7 @@ endm
         mov minutos,0d 
         mov segundos,0d
         mov cantObjetos,0d
-        mov tiempoAmarillo,10d
+        mov tiempoAmarillo,6d
 
 
         mostrarCadena cabecera
@@ -243,7 +243,7 @@ endm
     Escenario:
         printHUD
         recorrerObjetos
-        generarObstaculos
+        
 
         mov ah, 0bh
         int 21h    
@@ -272,6 +272,7 @@ endm
         
         delay 1000d
         moverObjetos
+        generarObstaculos
         popObjetos
         choque
         inc tiempoAmarilloTemp

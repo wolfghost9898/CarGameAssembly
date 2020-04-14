@@ -521,7 +521,7 @@ popObjetos macro
     add temp,4d 
 
 
-    limpiarGrafico ax,temp,175d,180d 
+    limpiarGrafico ax,temp,150d,180d 
 
     makePop
 
@@ -587,7 +587,7 @@ choque macro
 
 endm
 
-;################################# SACAMOS AL INICIO UN OBSTACULO
+;################################# SACAMOS AL INICIO UN OBSTACULO ####################
 makePop macro
     LOCAL recursividad,fin
     xor ax,ax
@@ -598,7 +598,6 @@ makePop macro
     mul bx 
     xor cx,cx
     mov bx,3d
-    dec cantObjetos
 
     recursividad:
         cmp bx,ax 
@@ -626,17 +625,23 @@ makePop macro
         mov [objetos + bx],dl 
         pop bx  
 
-        inc bx 
+        inc bx
+        inc cx 
         jmp recursividad  
-    fin:      
-     
+    fin:
+    dec cantObjetos      
 endm
 
+;################################ GENERARA CADA TIEMPO UN OBJETO EN POSICION ALETATORIA ###############
 generarObstaculos macro
     LOCAL fin
     push ax
     push bx
-    xor ax,ax 
+    
+    xor ax,ax
+    xor bx,bx 
+    
+    
     mov al,tiempoAmarilloTemp 
 
     cmp al,tiempoAmarillo 
@@ -650,17 +655,36 @@ generarObstaculos macro
     mov bx,ax 
 
     mov [objetos + bx],0d 
-    inc bx 
-    mov [objetos + bx],100d
+    inc bx
+    numeroAleatorio 
+    mov [objetos + bx],al
     inc bx 
     mov [objetos + bx],40d
     
     mov tiempoAmarilloTemp,0d
     inc cantObjetos
 
-
     fin:
 
     pop bx
     pop ax
+endm
+
+
+
+numeroAleatorio macro
+    push bx 
+    mov ah,2ch 
+    int 21h 
+
+
+    xor ax,ax
+    mov al,dh 
+    mov bx,7d 
+    mul bx 
+    mov bx,2d 
+    div bx
+    add ax,40d
+
+    pop bx
 endm
