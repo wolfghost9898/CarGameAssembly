@@ -309,13 +309,43 @@ endm
 
 
 ;########################## DIBUJAR HUD ####################
-printHUD macro
+printHUD macro 
+    printPuntaje
     printNumero minutos,73,0
     printCaracter 75,0,":"
     printNumero segundos,76,0
 endm
+;############################### IMPRIME EL PUNTAJE ACTUAL#####################
+printPuntaje macro
+    xor ax,ax
+    xor bx,bx 
+    xor cx,cx 
+    
 
 
+    mov ax,puntaje 
+    mov bx,100d 
+    div bl
+    push ax 
+    add al,48d
+    printCaracter 23,0,al 
+    pop ax 
+    mov al,ah
+    xor ah,ah
+    mov bx,10d
+    div bl
+    push ax 
+    add al,48d 
+    printCaracter 24,0,al
+    pop ax
+    mov al,ah 
+    add al,48d 
+    printCaracter 25,0,al
+
+
+
+   
+endm 
 ;##################### PRINT UN NUMERO ########################
 printNumero macro numero,columna,fila
     LOCAL decena,fin 
@@ -482,7 +512,7 @@ moverObjetos macro
         pop bx
         xor ax,ax 
         mov al,[objetos + bx]
-        add ax,10d  ; Velocidad de desplazamiento
+        add ax,8d  ; Velocidad de desplazamiento
         mov [objetos + bx],al
 
         pop ax
@@ -534,9 +564,9 @@ endm
 
 
 
-;#################### SI YA LLEGO EL ULTIMO AL BORDE LO SACAMOS ###########################
+;#################### SI CHOCA CON UN OBSTACULO EL VEHICULO ###########################
 choque macro
-    LOCAL fin,recursividad,eliminar
+    LOCAL fin,recursividad,eliminar,verde,salto
     
     cmp cantObjetos,0d
     jle fin 
@@ -568,7 +598,20 @@ choque macro
     xor ax,ax
     xor bx,bx 
 
+    mov al,[objetos + 0]
+    cmp al,0d 
+    je verde 
 
+    mov ax,puntosAmarillo 
+    add puntaje,ax
+
+    jmp salto
+    verde:
+
+        mov ax,puntosVerde 
+        sub puntaje,ax
+
+    salto:
     mov al,[objetos + 1]
 
     mov temp,ax 
@@ -634,7 +677,7 @@ endm
 
 ;################################ GENERARA CADA TIEMPO UN OBJETO EN POSICION ALETATORIA ###############
 generarObstaculos macro
-    LOCAL fin
+    LOCAL fin,verde
     push ax
     push bx
     
@@ -645,7 +688,7 @@ generarObstaculos macro
     mov al,tiempoAmarilloTemp 
 
     cmp al,tiempoAmarillo 
-    jl fin
+    jl verde
 
     xor ax,ax 
     mov al,cantObjetos 
@@ -654,7 +697,7 @@ generarObstaculos macro
 
     mov bx,ax 
 
-    mov [objetos + bx],0d 
+    mov [objetos + bx],1d 
     inc bx
     numeroAleatorio 
     mov [objetos + bx],al
@@ -664,6 +707,32 @@ generarObstaculos macro
     mov tiempoAmarilloTemp,0d
     inc cantObjetos
 
+
+    verde:
+        mov al,tiempoVerdeTemp 
+        cmp al,tiempoVerde 
+        jl fin
+
+        xor ax,ax 
+        mov al,cantObjetos 
+        mov bx,3d 
+        mul bx 
+
+        mov bx,ax 
+
+        mov [objetos + bx],0d 
+        inc bx
+        numeroAleatorio 
+        mov [objetos + bx],al
+        inc bx 
+        mov [objetos + bx],40d
+        
+        mov tiempoVerdeTemp,0d
+        inc cantObjetos 
+    
+
+
+
     fin:
 
     pop bx
@@ -671,20 +740,20 @@ generarObstaculos macro
 endm
 
 
-
+;####################### NOS DEVUELVE UN NUMERO ALEATORIO BASADO EN LOS SEGUNDOS DEL TIEMPO ACTUAL#############
 numeroAleatorio macro
     push bx 
     mov ah,2ch 
     int 21h 
 
-
+    add cl,ch
     xor ax,ax
-    mov al,dh 
-    mov bx,7d 
+    mov al,dl 
+    mov bx,19 
     mul bx 
-    mov bx,2d 
+    mov bx,12 
     div bx
-    add ax,40d
+    add ax,60d
 
     pop bx
 endm

@@ -97,14 +97,18 @@ endm
         minutos db ? 
         segundos db ?
         objetos db 99 DUP(0)
-        cantObjetos db 2 DUP(0)
+        cantObjetos db ?
 
-        tiempoAmarillo db 1 DUP(0)
-        tiempoVerde db 1 DUP(0)
+        tiempoAmarillo db ?
+        tiempoVerde db ?
 
-        tiempoAmarilloTemp db 1 DUP(0)
-        tiempoVerdeTemp db 1 DUP(0)
+        tiempoAmarilloTemp db ?
+        tiempoVerdeTemp db ?
 
+        puntaje dw ?
+
+        puntosAmarillo dw ?
+        puntosVerde dw ?
     ;################################## OTROS ####################################
         temp dw ?
 
@@ -226,10 +230,19 @@ endm
     Juego: 
         mov carroI,145d
         mov carroF,175d
+        
         mov minutos,0d 
         mov segundos,0d
+        
         mov cantObjetos,0d
+        
         mov tiempoAmarillo,6d
+        mov tiempoVerde,10d
+        
+        mov puntaje,0d
+
+        mov puntosAmarillo,3d
+        mov puntosVerde,1d
 
 
         mostrarCadena cabecera
@@ -270,13 +283,16 @@ endm
 
     refresco:
         
-        delay 1000d
+        delay 1200d
         moverObjetos
         generarObstaculos
         popObjetos
         choque
+
         inc tiempoAmarilloTemp
         inc tiempoVerdeTemp
+
+
         inc segundos 
         cmp segundos,60d 
         jg fin
