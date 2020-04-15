@@ -309,8 +309,14 @@ endm
 
 
 ;########################## DIBUJAR HUD ####################
-printHUD macro 
+printHUD macro
+    LOCAL salto
+    cmp puntaje,0d 
+    jl salto
     printPuntaje
+    
+    salto:
+
     printNumero minutos,73,0
     printCaracter 75,0,":"
     printNumero segundos,76,0
@@ -743,15 +749,20 @@ endm
 ;####################### NOS DEVUELVE UN NUMERO ALEATORIO BASADO EN LOS SEGUNDOS DEL TIEMPO ACTUAL#############
 numeroAleatorio macro
     push bx 
+    
     mov ah,00h 
     int 1ah 
-    xor ax,ax
+    
     mov ax,dx
-    mov bx,19 
+    xor dx,dx
+    mov bx,10 
+    div bx 
+    inc dx
+    mov ax,dx
+    mov bx,175d 
     mul bx 
-    mov bx,12 
-    div bx
-    add ax,60d
-
+    mov bx,9d 
+    div bx 
+    add ax,55d
     pop bx
 endm

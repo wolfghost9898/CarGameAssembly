@@ -228,16 +228,16 @@ endm
     ;##################################################### JUEGO #####################################################
     ;############################################################################################################################
     Juego: 
-        mov carroI,145d
-        mov carroF,175d
+        mov carroI,150d
+        mov carroF,165d
         
         mov minutos,0d 
         mov segundos,0d
         
         mov cantObjetos,0d
         
-        mov tiempoAmarillo,6d
-        mov tiempoVerde,10d
+        mov tiempoAmarillo,10d
+        mov tiempoVerde,3d
         
         mov puntaje,0d
 
@@ -292,6 +292,8 @@ endm
         inc tiempoAmarilloTemp
         inc tiempoVerdeTemp
 
+        cmp puntaje,0d 
+        jl fin
 
         inc segundos 
         cmp segundos,60d 
@@ -300,7 +302,7 @@ endm
     fin:
     mov ax,3h
     int 10h
-        
+    
     Salir:
     ingresarCaracter
     
