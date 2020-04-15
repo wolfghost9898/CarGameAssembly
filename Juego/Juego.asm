@@ -743,12 +743,10 @@ endm
 ;####################### NOS DEVUELVE UN NUMERO ALEATORIO BASADO EN LOS SEGUNDOS DEL TIEMPO ACTUAL#############
 numeroAleatorio macro
     push bx 
-    mov ah,2ch 
-    int 21h 
-
-    add cl,ch
+    mov ah,00h 
+    int 1ah 
     xor ax,ax
-    mov al,dl 
+    mov ax,dx
     mov bx,19 
     mul bx 
     mov bx,12 
