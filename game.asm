@@ -76,6 +76,7 @@ endm
         msgPasswordErrorN db 10,"La contrasenia no coincide$"
         msgContrasenia db 10,"Contrasenia: $"
         msgOpenError db 10,"No se pudo Abrir el archivo",10,"$"
+        msgCarga db 10,"Ingrese el Nombre del archivo: $"
 
     ;################################################## USUARIOS ######################################################
         usuario db 9 DUP('$')
@@ -90,6 +91,9 @@ endm
         fileSize dw 0
         filehandle dw ?
         buffer db 4000 dup (?), '$'
+
+        direccionCarga db 30 DUP("$")
+        fileCarga db "C:\p1\Juego\db.ply",0
 
     ;######################################### JUEGO ###############################
         carroI dw ? 
@@ -109,9 +113,20 @@ endm
 
         puntosAmarillo dw ?
         puntosVerde dw ?
+
+        
+        posicionActual dw ?
+        cadenaNivel db 3 DUP("$")
+        tiempoNivel dw ?
+        tiempoActual dw ? 
+        nivelActual dw ?
+
+
+        colorCarro db ?
     ;################################## OTROS ####################################
         temp dw ?
-
+        temp2 dw ?
+        tamUser dw ?
         msg1 db "hello$"
 .code
     mov ax,@data
@@ -153,7 +168,7 @@ endm
         jmp Ingresar
     
     ingresarContrasena:
-         mostrarCaracter 10
+        mostrarCaracter 10
         
         mostrarCadena msgContrasenia
         ingresarCadena contrasenia
@@ -227,7 +242,50 @@ endm
     ;#############################################################################################################################
     ;##################################################### JUEGO #####################################################
     ;############################################################################################################################
-    Juego: 
+    Juego:
+        clearScreen 
+
+        mostrarCadena cabecera
+        mostrarCadena msgJuego
+        ingresarCaracter
+        
+        cmp bl,'1'
+        je configuracion
+
+        cmp bl,'2'
+        je cargarJuego
+
+        jmp Salir
+    
+
+    cargarJuego:
+        clearScreen 
+        ;mostrarCadena msgCarga
+        ;ingresarCadena direccionCarga 
+        ;corregirDireccion direccionCarga,fileCarga ; Eliminamos el \n al final y agregamos un 0
+        abrirArchivo fileCarga ;Abrimos el archivo en lectura/escritura
+        
+        cmp bx,0d 
+        jne leerCarga ; Si se puedo abrir lo leemos
+        
+        mostrarCadena msgOpenError
+        ingresarCaracter
+        jmp Juego
+        
+    leerCarga:
+        leerArchivo 
+        mostrarCadena buffer
+        cerrarArchivo
+        ingresarCaracter
+
+        jmp Juego
+
+        
+    
+    configuracion:
+        mov posicionActual,0d 
+        cargarNivel
+        
         mov carroI,150d
         mov carroF,165d
         
@@ -235,24 +293,17 @@ endm
         mov segundos,0d
         
         mov cantObjetos,0d
+        mov puntaje,3d
+
+        mov tiempoActual,0d 
+        mov nivelActual,1d
         
-        mov tiempoAmarillo,10d
-        mov tiempoVerde,3d
         
-        mov puntaje,0d
-
-        mov puntosAmarillo,3d
-        mov puntosVerde,1d
-
-
-        mostrarCadena cabecera
-        mostrarCadena msgJuego
-        ingresarCaracter
         clearScreen 
         modoVideo
         printCalle
         printCarro
-    
+
     Escenario:
         printHUD
         recorrerObjetos
@@ -271,6 +322,7 @@ endm
         cmp AH, 4Bh     
         je izquierda
 
+        printCarro
         jmp fin
 
     izquierda:
@@ -295,10 +347,25 @@ endm
         cmp puntaje,0d 
         jl fin
 
-        inc segundos 
-        cmp segundos,60d 
-        jg fin
+        controlTiempo
+        
+        mov bx,tiempoActual
+        cmp bx,tiempoNivel 
+        jg controlFin
+
         jmp Escenario
+    
+    controlFin: 
+        mov bx,posicionActual 
+        cmp bx,fileSize
+        jge fin 
+
+        mov tiempoActual,0d 
+        cargarNivel
+        inc nivelActual
+        jmp Escenario
+    
+    
     fin:
     mov ax,3h
     int 10h

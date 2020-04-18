@@ -98,7 +98,7 @@ printCarro macro
             cmp bx,carroF
             jg fin 
 
-            pintar bx,dx,5
+            pintar bx,dx,colorCarro
 
             inc bx 
             jmp recursividad
@@ -311,6 +311,7 @@ endm
 ;########################## DIBUJAR HUD ####################
 printHUD macro
     LOCAL salto
+    printCadena 18,0,cadenaNivel
     cmp puntaje,0d 
     jl salto
     printPuntaje
@@ -765,4 +766,174 @@ numeroAleatorio macro
     div bx 
     add ax,55d
     pop bx
+endm
+
+;Cargamos la informacion de un nuevo nivel
+cargarNivel macro
+    LOCAL fin,recursivo,siguiente,salto
+    push bx 
+    push ax
+    push dx 
+    push cx 
+
+    xor bx,bx 
+    
+    mov bx,posicionActual 
+    cmp bx,fileSize ;Si ya superamos los niveles nos salimos
+    jge fin 
+
+    add posicionActual,6d
+    ;Guardamos el nombre del nivel
+    mov [cadenaNivel + 0],'N'
+    mov bx,posicionActual
+    mov cl,[buffer + bx]
+    mov [cadenaNivel + 1],cl 
+    
+    add posicionActual,2d   
+
+    ;Obtenemos el tiempo del nivel
+    getNumber
+    mov tiempoNivel,ax
+
+    ;Obtenemos el tiempo para los obstaculos
+    getNumber
+    mov tiempoVerde,al
+    
+    ;Obtenemos el tiempo para los premios 
+    getNumber
+    mov tiempoAmarillo,al
+
+    ;Obtenemos el color 
+    getColor 
+    mov colorCarro,al
+
+    ;Obtenemos el valor del puntaje amarillo 
+    getNumber 
+    mov puntosAmarillo,ax
+
+    ;Obtenemos el valor del puntaje verde
+    getNumber 
+    mov puntosVerde,ax
+    fin:
+
+    pop cx 
+    pop dx
+    pop ax
+    pop bx
+endm
+
+
+;Convertimos el string numero a un int 
+getNumber macro
+    LOCAL fin,recursivo,convertir,recursivo2
+    xor dx,dx
+    mov temp2,0d
+    recursivo:
+        mov bx,posicionActual
+        xor cx,cx
+        mov cl,[buffer + bx]
+       
+        cmp cl,59d
+        je convertir ;Si es un punto y coma entonces procedemos a convertir el numero 
+        cmp cl,10d 
+        je convertir
+
+        cmp bx,fileSize 
+        jge convertir
+
+        sub cx,48d 
+        push cx
+        
+        inc temp2 
+        inc posicionActual
+        jmp recursivo
+    
+    
+    convertir:
+        
+        inc posicionActual
+        mov bx,1d
+        mov temp,0d
+        
+        recursivo2:
+            cmp temp2,0d
+            jle fin ;Si ya no tenemos numeros que sacar 
+
+            pop cx
+            mov ax,cx
+            mul bx 
+            add ax,temp
+            mov temp,ax
+
+            mov ax,bx 
+            mov bx,10d 
+            mul bx 
+            mov bx,ax 
+
+            mov ax,temp
+
+            dec temp2 
+            jmp recursivo2
+
+    fin:
+endm
+
+
+;Obtenemos el color y lo volvermos un numero 
+getColor macro
+    LOCAL rojo,fin,verde,blanco
+    mov bx,posicionActual 
+    mov cl,[buffer + bx]
+    
+    cmp cl,'r'
+    je rojo 
+
+    cmp cl,'v'
+    je verde 
+
+    cmp cl,'b'
+    je blanco
+
+    add posicionActual,5 
+    mov ax,9d 
+    jmp fin
+    
+    rojo: 
+        add posicionActual,5
+        mov ax,4d 
+        jmp fin
+
+    verde:
+
+        add posicionActual,6
+        mov ax,2d 
+        jmp fin
+
+    blanco: 
+        add posicionActual,7 
+        mov ax,15 
+        jmp fin 
+    
+
+    fin:
+
+endm
+
+
+;controlamos el tiempo cada 60seg aumentamos en 1 el minuto 
+controlTiempo macro
+    LOCAL fin 
+
+    inc segundos
+
+    cmp segundos,60d 
+    jl fin 
+
+    mov segundos,0d 
+    inc minutos
+
+
+    fin:
+
+    inc tiempoActual
 endm

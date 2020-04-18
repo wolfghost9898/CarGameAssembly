@@ -74,8 +74,6 @@ startFile macro
     int 21h
 endm
 
-
-
 ;Escribimos al final del archivo 
 writeAppend macro cadena,tam
     endFile
@@ -85,3 +83,30 @@ writeAppend macro cadena,tam
     mov ah,40h 
     int 21h
 endm
+
+
+;Arreglamos la direccion elimnando los $ 
+corregirDireccion macro actual,destino
+    LOCAL recursivo,salida,error,fin
+    xor bx,bx
+    mov SI,offset actual + 2
+    mostrarCaracter 10d
+    recursivo:
+        mov cl,[SI + BX]
+        cmp cl,'$'
+        je salida
+        cmp cl,'#'
+        je salida 
+
+        mov [destino + bx],cl
+        mostrarCaracter cl
+
+        inc bx
+        jmp recursivo
+
+
+    salida:  
+endm
+
+
+
