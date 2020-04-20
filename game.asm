@@ -140,6 +140,7 @@ endm
         espacioGrafica dw ?
         posicionGrafica dw ?
         valorMayor dw ?
+        colorGrafica db ?
 
 .code
     mov ax,@data

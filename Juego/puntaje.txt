@@ -1,3 +1,5 @@
-carlos;20;3
-carlo2;10;4
-carlo2;5;4
+carlos;99;3
+carlo2;80;4
+carlo2;60;4
+carlo2;40;4
+carlo2;20;4

@@ -97,10 +97,14 @@ graficarArreglo macro
         xor cx,cx 
         mov cl,[arreglo + bx]
         
-        cambiarEscala cx
+        configurarGrafica cx    ; Que color sera la grafica 
+
+        cambiarEscala cx        ; El valor corregido para graficar
         mov cx,ax
-        pop ax
-        graficarRectangulo cx
+        pop ax        
+        
+        
+        graficarRectangulo cx,colorGrafica
         add posicionGrafica,5d
 
         inc bx 
@@ -114,7 +118,7 @@ endm
 
 
 ;Graficamos un rectangulo 
-graficarRectangulo macro altura
+graficarRectangulo macro altura,color
     LOCAL recursividad,fin,recursividadY,finY
     push bx 
     push ax
@@ -130,7 +134,7 @@ graficarRectangulo macro altura
             cmp ax,altura 
             jl finY 
 
-            pintar posicionGrafica,ax,5d
+            pintar posicionGrafica,ax,color
 
             dec ax 
             jmp recursividadY
@@ -200,4 +204,41 @@ cambiarEscala macro numero
     mov ax,170d 
     sub ax,temp 
     pop bx
+endm
+
+;Color de la grafica 
+configurarGrafica macro numero   
+    LOCAL rojo,fin,azul,amarillo,verde
+    cmp numero,20d 
+    jle rojo 
+    
+    cmp numero,40d 
+    jle azul 
+
+    cmp numero,60d 
+    jle amarillo
+
+    cmp numero,80d 
+    jle verde 
+
+    mov colorGrafica,15d 
+    jmp fin
+
+    verde: 
+        mov colorGrafica,2d 
+        jmp fin
+
+    amarillo: 
+        mov colorGrafica,14d 
+        jmp fin 
+
+
+    azul: 
+        mov colorGrafica,1d 
+        jmp fin
+
+    rojo: 
+        mov colorGrafica,4d
+    
+    fin:
 endm
