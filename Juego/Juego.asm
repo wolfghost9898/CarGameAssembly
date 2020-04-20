@@ -824,7 +824,7 @@ endm
 
 
 ;Convertimos el string numero a un int 
-getNumber macro
+getNumber macro 
     LOCAL fin,recursivo,convertir,recursivo2
     xor dx,dx
     mov temp2,0d

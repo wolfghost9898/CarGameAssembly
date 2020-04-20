@@ -1,6 +1,7 @@
 include File.asm
 include Usuario/Usuario.asm
 include Juego/Juego.asm
+include Short.asm
 
 ;##############################################################################
 ;########################## MOSTRAR UNA CADENA     ###################
@@ -78,6 +79,8 @@ endm
         msgOpenError db 10,"No se pudo Abrir el archivo",10,"$"
         msgCarga db 10,"Ingrese el Nombre del archivo: $"
 
+        msgSesionAdmin db 10,"1) Top 10 Puntos",10,"2) Top 10 Tiempo",10,"3) Salir",10,"$"
+
     ;################################################## USUARIOS ######################################################
         usuario db 9 DUP('$')
         contrasenia db 6 DUP('$')
@@ -86,6 +89,7 @@ endm
        
         
         direccionUsuario db "C:\p1\Usuario\db.txt",0
+        direccionPuntaje db "C:\p1\Juego\puntaje.txt",0
         tamanio dw ?
         cadena db 10 DUP("$")
         fileSize dw 0
@@ -128,6 +132,15 @@ endm
         temp2 dw ?
         tamUser dw ?
         msg1 db "hello$"
+    ;################################## GRAFICAS ####################################
+        arreglo db 60 DUP(0)
+        arregloTemp db 60 DUP(0)
+        cantidadRegistros db ?
+        cantidadEspacios dw ?
+        espacioGrafica dw ?
+        posicionGrafica dw ?
+        valorMayor dw ?
+
 .code
     mov ax,@data
     mov ds,ax
@@ -150,7 +163,7 @@ endm
     ;##################################################### INICIAR SESION #####################################################
     ;############################################################################################################################
     Ingresar:
-        jmp Juego
+        jmp Administrador
         clearScreen
         abrirArchivo direccionUsuario
         mostrarCadena msgUsuario
@@ -365,7 +378,33 @@ endm
         inc nivelActual
         jmp Escenario
     
+    ;#############################################################################################################################
+    ;##################################################### ADMINISTRADOR #####################################################
+    ;############################################################################################################################
     
+    Administrador:
+        clearScreen
+        mostrarCadena cabecera
+        mostrarCadena msgSesionAdmin
+        ingresarCaracter
+
+        cmp bl,'1'
+        je topPuntaje
+
+        jmp fin 
+
+    topPuntaje:
+        clearScreen
+        abrirArchivo direccionPuntaje
+        leerArchivo
+        mostrarCadena buffer
+        cerrarArchivo
+        cargarPuntaje
+        ingresarCaracter
+        modoVideo
+        graficarArreglo
+        
+        ingresarCaracter
     fin:
     mov ax,3h
     int 10h
