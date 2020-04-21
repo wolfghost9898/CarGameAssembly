@@ -1,3 +1,4 @@
+;Nos pasamos a modo video 
 modoVideo macro 
     mov ah,00h
     mov al,13h
@@ -7,6 +8,12 @@ modoVideo macro
 
 endm
 
+
+;Nos pasamos a modo consola 
+modoConsola macro 
+    mov ax,3h
+    int 10h
+endm
 
 ;##################### MUESRTA EL FONDO Y LOS DATOS ########################
 printCalle macro
@@ -372,9 +379,12 @@ printNumero macro numero,columna,fila
 
    
     xor bx,bx 
-    printCaracter columna,fila,48d
+    mov dl,columna
+    printCaracter dl,fila,48d
     add cl,48d 
-    printCaracter columna + 1,fila,cl
+    mov dl,columna
+    inc dl
+    printCaracter dl,fila,cl
     jmp fin
     
     decena:
@@ -389,9 +399,12 @@ printNumero macro numero,columna,fila
         mov cl,al 
         mov ch,dl
         add cl,48d 
-        printCaracter columna,fila,cl
+        mov bl,columna
+        printCaracter bl,fila,cl
         add ch,48d
-        printCaracter columna + 1,fila,ch 
+        mov dl,columna 
+        inc dl
+        printCaracter dl,fila,ch 
 
     fin:
     pop dx 

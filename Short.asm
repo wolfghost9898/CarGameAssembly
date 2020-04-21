@@ -52,7 +52,16 @@ guardarArreglo macro
     mov bx,ax 
     pop ax
     mov cl,cantidadRegistros
-    mov [arreglo + bx],cl 
+    mov [arreglo + bx],cl
+    
+    push bx 
+    xor bx,bx
+    mov bl,cantidadRegistros 
+    mov [arregloTemp + bx],al
+    pop bx
+    
+    
+    
     inc bx 
     mov [arreglo + bx],al 
     inc cantidadRegistros
@@ -63,11 +72,15 @@ endm
 ;Graficamos el arreglo en su estado actual 
 graficarArreglo macro
     LOCAL recursividad,fin
+
     push bx 
     push ax
     push cx
     xor bx,bx 
-    
+    xor ax,ax 
+    xor cx,cx 
+    xor dx,dx 
+
     cmp cantidadRegistros,0d 
     jle fin                     ; Si no hay datos no graficamos
 
@@ -76,26 +89,25 @@ graficarArreglo macro
     mov ax,5d 
     mul cantidadRegistros
     mov cantidadEspacios,ax     ; Obtenemos el espacio libre
-    
+        
+    xor bx,bx
     mov ax,260d 
     sub ax,cantidadEspacios     ; Obtenemos el espacio para graficar
     mov bl,cantidadRegistros 
     div bx                      ; Obtenemos el espacio que ocupara cada grafica
-    
+
     mov espacioGrafica,ax 
     buscarValorMayor            ; El maximo valor a graficar
     xor ax,ax 
     mov al,cantidadRegistros 
-    mov bx,2d 
-    mul bx 
     xor bx,bx
     recursividad:
         cmp bx,ax
         jge fin
-        inc bx 
         push ax
         xor cx,cx 
-        mov cl,[arreglo + bx]
+        mov cl,[arregloTemp + bx]   ;Obtenemos el valor
+        mov temporal2,cl
         
         configurarGrafica cx    ; Que color sera la grafica 
 
@@ -103,8 +115,11 @@ graficarArreglo macro
         mov cx,ax
         pop ax        
         
-        
+        posicionNumero posicionGrafica
         graficarRectangulo cx,colorGrafica
+        
+        printNumero temporal2,temporal,22d
+        
         add posicionGrafica,5d
 
         inc bx 
@@ -161,16 +176,13 @@ buscarValorMayor macro
 
     xor ax,ax
     mov al,cantidadRegistros 
-    mov bx,2d 
-    mul bx 
     xor bx,bx 
     recursividad:
         cmp bx,ax 
         jge fin 
          
-        inc bx
         xor cx,cx 
-        mov cl,[arreglo + bx]
+        mov cl,[arregloTemp + bx]
         cmp cx,valorMayor
         jle salto 
 
@@ -242,3 +254,121 @@ configurarGrafica macro numero
     
     fin:
 endm
+
+;Mueve el numero abajo de la grafica, y lo pone al inicio de ella
+posicionNumero macro numero
+    push ax 
+    push bx 
+    push dx 
+    push cx
+
+    mov ax,numero 
+    mov bx,3d
+    mul bx 
+    mov bx,26d 
+    div bx 
+    add al,2d
+    mov temporal,al
+
+    pop cx
+    pop dx
+    pop bx 
+    pop ax
+endm
+
+;Ordenamiento por quickSort 
+ordenamientoQuickSort macro primero,ultimo
+    LOCAL fin
+    push ax 
+    push bx 
+    push cx 
+    push dx
+
+    mov ax,primero 
+    mov bx,ultimo
+
+    mov first,ax
+    mov last,bx
+
+    call ordenamientoQuick
+
+    pop dx 
+    pop cx 
+    pop bx 
+    pop ax
+   
+endm
+
+
+partition macro arreglo,primero,ultimo
+    LOCAL recursividad,fin,salto
+    push ax
+    push bx 
+    push cx 
+    push dx 
+
+    mov bx,ultimo 
+    mov cl,[arreglo + bx]
+    mov pivote,cl
+
+    mov ax,primero 
+    dec ax 
+    mov i,ax
+
+    
+
+    mov cx,primero
+    
+    recursividad: 
+        cmp cx,ultimo 
+        jge fin
+
+        mov bx,cx 
+        mov al,[arreglo + bx]
+        
+        cmp al,pivote
+        jge salto                       ;De menor a mayor
+        
+        inc i
+        mov bx,i
+        mov ah,[arreglo + bx]
+        mov [arreglo + bx],al
+        mov bx,cx 
+        mov [arreglo + bx],ah   
+
+        salto:
+        
+        inc cx 
+        jmp recursividad
+
+
+        
+    
+
+
+
+    fin:
+        mov bx,i 
+        inc bx 
+        mov al,[arreglo + bx]
+        mov bx,ultimo 
+        mov ah,[arreglo + bx]
+        mov bx,i 
+        inc bx 
+        mov [arreglo + bx],ah
+        mov bx,ultimo 
+        mov [arreglo + bx],al
+
+    mov bx,i 
+    inc bx 
+    mov temp2,bx
+
+
+    pop dx 
+    pop cx 
+    pop bx 
+    pop ax
+endm
+
+
+

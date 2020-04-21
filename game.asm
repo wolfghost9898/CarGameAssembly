@@ -65,6 +65,8 @@ endm
 .model small
 .stack 
 .data
+        arreglo db 60 DUP(0)
+        arregloTemp db 60 DUP(0)
 	;################################################### MENSAJES ####################################################
 		cabecera   db "Universidad de San Carlos de Guatemala",10,"Facultad de Ingenieria",10,"Ciencias y Sistemas",10,
 		"Arquitectura de computadores y ensambladores 1",10,"Carlos Eduardo Hernandez Molina",10,"201612118",10,"Seccion A",10,"$"
@@ -80,7 +82,8 @@ endm
         msgCarga db 10,"Ingrese el Nombre del archivo: $"
 
         msgSesionAdmin db 10,"1) Top 10 Puntos",10,"2) Top 10 Tiempo",10,"3) Salir",10,"$"
-
+        msgTipoOrdenamiento db 10,"1) Ordenamiento BubbleSort",10,"2) Ordenamiento QuickSort",10,"3) Ordenamiento ShellSort"
+    
     ;################################################## USUARIOS ######################################################
         usuario db 9 DUP('$')
         contrasenia db 6 DUP('$')
@@ -131,10 +134,10 @@ endm
         temp dw ?
         temp2 dw ?
         tamUser dw ?
-        msg1 db "hello$"
+        temporal db 0
+        temporal2 db ?
     ;################################## GRAFICAS ####################################
-        arreglo db 60 DUP(0)
-        arregloTemp db 60 DUP(0)
+
         cantidadRegistros db ?
         cantidadEspacios dw ?
         espacioGrafica dw ?
@@ -142,7 +145,15 @@ endm
         valorMayor dw ?
         colorGrafica db ?
 
+    ;################################## QUICK SORT ####################################
+        i dw ?
+        j db ?
+        pivote db ?
+        first dw ?
+        last dw ?
+
 .code
+main proc
     mov ax,@data
     mov ds,ax
     mov dx,ax 
@@ -395,17 +406,42 @@ endm
         jmp fin 
 
     topPuntaje:
+        
         clearScreen
         abrirArchivo direccionPuntaje
         leerArchivo
-        mostrarCadena buffer
         cerrarArchivo
+        
         cargarPuntaje
+        
+        modoVideo
+        graficarArreglo
+        
+        ingresarCaracter         
+        modoConsola 
+        mostrarCadena msgTipoOrdenamiento
+        mostrarCaracter 10d
         ingresarCaracter
+
+        cmp bl,'1'
+        je quicksort 
+
+        jmp Salir
+    
+    quicksort:
+        xor ax,ax
+        mov al,cantidadRegistros
+        dec ax
+        mov temp,ax
+
+        ordenamientoQuickSort 0d,temp
+        clearScreen
         modoVideo
         graficarArreglo
         
         ingresarCaracter
+        modoConsola
+
     fin:
     mov ax,3h
     int 10h
@@ -419,4 +455,36 @@ endm
 
 
 
+main endp
+
+ordenamientoQuick proc
+    mov ax,first
+    cmp ax,last 
+    jge fin
+
+    partition arregloTemp,first,last
+    mov cx,temp2
+     
+
+    push bx 
+    push cx
+    
+    dec cx
+    mov bx,cx
+    ordenamientoQuickSort ax,bx 
+
+    pop cx
+    pop bx 
+    inc cx 
+    mov ax,cx 
+    ordenamientoQuickSort ax,bx
+
+    
+
+    fin:
+    ret
+ordenamientoQuick endp
+
+
 end
+
