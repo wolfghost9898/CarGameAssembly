@@ -132,6 +132,9 @@ endm
         colorCarro db ?
     ;################################## OTROS ####################################
         temp dw ?
+        contador dw ?
+        contador2 dw ?
+        temporal3 dw ?
         temp2 dw ?
         tamUser dw ?
         temporal db 0
@@ -415,7 +418,7 @@ main proc
         cargarPuntaje
         
         modoVideo
-        graficarArreglo
+        graficarArreglo 1d
         
         ingresarCaracter         
         modoConsola 
@@ -423,7 +426,10 @@ main proc
         mostrarCaracter 10d
         ingresarCaracter
 
-        cmp bl,'1'
+        cmp bl,'1' 
+        je bubblesort 
+
+        cmp bl,'2'
         je quicksort 
 
         jmp Salir
@@ -435,10 +441,24 @@ main proc
         mov temp,ax
 
         ordenamientoQuickSort 0d,temp
+        
         clearScreen
         modoVideo
-        graficarArreglo
-        
+        graficarArreglo 1d
+        ingresarCaracter
+        modoConsola
+        jmp fin
+
+    bubblesort:
+        xor ax,ax
+        mov al,cantidadRegistros 
+        dec ax 
+        mov temp,ax 
+        ordenamientoBubbleSort temp 
+
+        clearScreen
+        modoVideo
+        graficarArreglo 1d 
         ingresarCaracter
         modoConsola
 
@@ -465,20 +485,21 @@ ordenamientoQuick proc
     partition arregloTemp,first,last
     mov cx,temp2
      
-
+    
     push bx 
     push cx
+    
     
     dec cx
     mov bx,cx
     ordenamientoQuickSort ax,bx 
-
+    
     pop cx
     pop bx 
     inc cx 
     mov ax,cx 
     ordenamientoQuickSort ax,bx
-
+        
     
 
     fin:

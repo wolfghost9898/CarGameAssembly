@@ -70,12 +70,14 @@ guardarArreglo macro
 endm
 
 ;Graficamos el arreglo en su estado actual 
-graficarArreglo macro
+graficarArreglo macro tiempo
     LOCAL recursividad,fin
 
     push bx 
     push ax
     push cx
+    push dx 
+
     xor bx,bx 
     xor ax,ax 
     xor cx,cx 
@@ -121,10 +123,12 @@ graficarArreglo macro
         printNumero temporal2,temporal,22d
         
         add posicionGrafica,5d
-
+        delay tiempo
         inc bx 
         jmp recursividad
     fin:
+
+    pop dx
     pop cx
     pop ax
     pop bx
@@ -291,7 +295,7 @@ ordenamientoQuickSort macro primero,ultimo
     mov last,bx
 
     call ordenamientoQuick
-
+    
     pop dx 
     pop cx 
     pop bx 
@@ -299,7 +303,7 @@ ordenamientoQuickSort macro primero,ultimo
    
 endm
 
-
+;Hace el movimiento en quicksort
 partition macro arreglo,primero,ultimo
     LOCAL recursividad,fin,salto
     push ax
@@ -337,14 +341,8 @@ partition macro arreglo,primero,ultimo
         mov [arreglo + bx],ah   
 
         salto:
-        
         inc cx 
-        jmp recursividad
-
-
-        
-    
-
+        jmp recursividad 
 
 
     fin:
@@ -358,16 +356,95 @@ partition macro arreglo,primero,ultimo
         mov [arreglo + bx],ah
         mov bx,ultimo 
         mov [arreglo + bx],al
-
     mov bx,i 
     inc bx 
     mov temp2,bx
 
-
+    graficarPaso
     pop dx 
     pop cx 
     pop bx 
     pop ax
+endm
+
+;Grafica cada paso del ordenamiento
+graficarPaso macro
+    push ax 
+    push bx 
+    push cx 
+    push dx 
+
+    xor ax,ax 
+    xor bx,bx 
+    xor cx,cx
+    xor cx,cx
+    modoVideo 
+    graficarArreglo 500d
+    modoConsola
+
+
+    pop dx 
+    pop cx 
+    pop bx
+    pop ax
+endm
+
+
+;Ordenamiento por bubblesort 
+ordenamientoBubbleSort macro  
+    LOCAL recursividad,fin,recursividadY,finY,salto
+    
+    xor ax,ax
+    mov al,cantidadRegistros 
+    dec ax 
+    mov temporal3,ax
+    xor cx,cx
+    
+    recursividad:
+
+        cmp cx,temporal3 
+        jge fin 
+
+        mov ax,temporal3
+        sub ax,cx
+        mov contador,ax 
+        
+        xor ax,ax 
+        recursividadY:
+            cmp ax,contador 
+            jge finY 
+            
+            mov bx,ax 
+            mov dl,[arregloTemp + bx] ;Arreglo[j]
+            inc bx 
+            mov dh,[arregloTemp + bx] ;Arreglo[j + 1]
+
+            cmp dl,dh 
+            jle salto
+
+                dec bx 
+                mov [arregloTemp + bx],dh    ; asignamos a arreglo[j] = arreglo[j+1]
+                inc bx 
+                mov [arregloTemp + bx],dl    ; asignamos arreglo[j + 1] = arreglo[j]
+            
+            salto:
+            graficarPaso
+            inc ax 
+            jmp recursividadY
+
+
+        finY:
+
+
+       
+
+
+        inc cx
+        jmp recursividad
+
+    fin:
+
+  
 endm
 
 
