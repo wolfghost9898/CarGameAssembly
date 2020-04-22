@@ -80,6 +80,7 @@ endm
         msgContrasenia db 10,"Contrasenia: $"
         msgOpenError db 10,"No se pudo Abrir el archivo",10,"$"
         msgCarga db 10,"Ingrese el Nombre del archivo: $"
+        msgOrdenamiento db 10,"1) Ascendente",10,"2) Descendente",10,"$"
 
         msgSesionAdmin db 10,"1) Top 10 Puntos",10,"2) Top 10 Tiempo",10,"3) Salir",10,"$"
         msgTipoOrdenamiento db 10,"1) Ordenamiento BubbleSort",10,"2) Ordenamiento QuickSort",10,"3) Ordenamiento ShellSort"
@@ -147,6 +148,7 @@ endm
         posicionGrafica dw ?
         valorMayor dw ?
         colorGrafica db ?
+        ordenamiento db ?
 
     ;################################## QUICK SORT ####################################
         i dw ?
@@ -438,6 +440,8 @@ main proc
         jmp Administrador
     
     quicksort:
+        tipoOrdenamiento
+        graficarPaso
         xor ax,ax
         mov al,cantidadRegistros
         dec ax
@@ -453,8 +457,8 @@ main proc
         jmp Administrador
 
     bubblesort:
-        
-
+        tipoOrdenamiento
+        graficarPaso
         ordenamientoBubbleSort 
 
         clearScreen
@@ -467,6 +471,8 @@ main proc
 
 
     shellshort:
+        tipoOrdenamiento
+        graficarPaso
         ordenamientoShellSort
         clearScreen
         modoVideo

@@ -305,7 +305,7 @@ endm
 
 ;Hace el movimiento en quicksort
 partition macro arreglo,primero,ultimo
-    LOCAL recursividad,fin,salto
+    LOCAL recursividad,fin,salto,ascendente,salto2
     push ax
     push bx 
     push cx 
@@ -330,9 +330,20 @@ partition macro arreglo,primero,ultimo
         mov bx,cx 
         mov al,[arreglo + bx]
         
+        cmp ordenamiento,1d 
+        je ascendente 
+
         cmp al,pivote
-        jge salto                       ;De menor a mayor
+        jle salto                       ;De mayor a menor
         
+        jmp salto2
+        
+        ascendente:
+            cmp al,pivote
+            jge salto                       ;De menor a mayor
+        
+        salto2:
+
         inc i
         mov bx,i
         mov ah,[arreglo + bx]
@@ -341,6 +352,7 @@ partition macro arreglo,primero,ultimo
         mov [arreglo + bx],ah   
 
         salto:
+        graficarPaso
         inc cx 
         jmp recursividad 
 
@@ -379,7 +391,7 @@ graficarPaso macro
     xor cx,cx
     xor cx,cx
     modoVideo 
-    graficarArreglo 500d
+    graficarArreglo 1000d
     modoConsola
 
 
@@ -392,7 +404,7 @@ endm
 
 ;Ordenamiento por bubblesort 
 ordenamientoBubbleSort macro  
-    LOCAL recursividad,fin,recursividadY,finY,salto
+    LOCAL recursividad,fin,recursividadY,finY,salto,ascendente,salto2
     
     xor ax,ax
     mov al,cantidadRegistros 
@@ -419,8 +431,17 @@ ordenamientoBubbleSort macro
             inc bx 
             mov dh,[arregloTemp + bx] ;Arreglo[j + 1]
 
-            cmp dl,dh 
-            jle salto
+            cmp ordenamiento,1d 
+            je ascendente
+
+            cmp dl,dh
+            jge salto
+            jmp salto2
+            ascendente:
+                cmp dl,dh 
+                jle salto
+            
+            salto2:
 
                 dec bx 
                 mov [arregloTemp + bx],dh    ; asignamos a arreglo[j] = arreglo[j+1]
@@ -450,7 +471,7 @@ endm
 
 ;Ordenamiento por shellsort 
 ordenamientoShellSort macro
-    LOCAL recursividad,fin,while,finwhile,for,finfor,salto
+    LOCAL recursividad,fin,while,finwhile,for,finfor,salto,ascendente,salto2
     xor ax,ax 
     mov al,cantidadRegistros
     mov temporal3,ax            ;Tamanio del arreglo
@@ -480,9 +501,18 @@ ordenamientoShellSort macro
                 mov bx,cx 
                 mov dh,[arregloTemp  + bx]          ; arreglo[i]
 
+                cmp ordenamiento,1d 
+                je ascendente
+
+                cmp dl,dh 
+                jge salto 
+                jmp salto2
+
+                ascendente:
                 cmp dl,dh 
                 jle salto 
 
+                salto2:
                 mov [arregloTemp  + bx],dl          ; arreglo[i] = arreglo[i - mitad]
                 mov bx,cx 
                 sub bx,ax 
@@ -508,6 +538,24 @@ ordenamientoShellSort macro
         
     fin:
 
+endm
+
+
+;Preguntar que tipo de ordenamiento sera, Ascendente o Descendente 
+tipoOrdenamiento macro
+    LOCAL ascendente,fin
+    clearScreen 
+    mostrarCadena msgOrdenamiento 
+    ingresarCaracter 
+    cmp bl,'1'
+    je ascendente 
+
+    mov ordenamiento,0d         ;Descendente 
+    jmp fin 
+
+    ascendente:
+        mov ordenamiento,1d         ;Ascendente 
+    fin:
 endm
 
 
