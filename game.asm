@@ -432,7 +432,10 @@ main proc
         cmp bl,'2'
         je quicksort 
 
-        jmp Salir
+        cmp bl,'3' 
+        je shellshort
+        
+        jmp Administrador
     
     quicksort:
         xor ax,ax
@@ -447,20 +450,31 @@ main proc
         graficarArreglo 1d
         ingresarCaracter
         modoConsola
-        jmp fin
+        jmp Administrador
 
     bubblesort:
-        xor ax,ax
-        mov al,cantidadRegistros 
-        dec ax 
-        mov temp,ax 
-        ordenamientoBubbleSort temp 
+        
+
+        ordenamientoBubbleSort 
 
         clearScreen
         modoVideo
         graficarArreglo 1d 
         ingresarCaracter
         modoConsola
+
+        jmp Administrador
+
+
+    shellshort:
+        ordenamientoShellSort
+        clearScreen
+        modoVideo
+        graficarArreglo 1d 
+        ingresarCaracter
+        modoConsola
+
+        jmp Administrador
 
     fin:
     mov ax,3h

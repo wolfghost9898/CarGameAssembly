@@ -448,4 +448,66 @@ ordenamientoBubbleSort macro
 endm
 
 
+;Ordenamiento por shellsort 
+ordenamientoShellSort macro
+    LOCAL recursividad,fin,while,finwhile,for,finfor,salto
+    xor ax,ax 
+    mov al,cantidadRegistros
+    mov temporal3,ax            ;Tamanio del arreglo
+    mov bx,2d 
+    div bl 
+    
+    recursividad:
+        xor ah,ah 
+        cmp ax,0d 
+        jle fin 
+
+        mov contador,1d 
+        while:
+            cmp contador,0d 
+            je finwhile
+
+            mov contador,0d
+            mov cx,ax             ;La mitad del arreglo(i)
+            
+            for: 
+                cmp cx,temporal3
+                jge finfor
+
+                mov bx,cx 
+                sub bx,ax 
+                mov dl,[arregloTemp + bx]           ; arreglo[i - mitad]
+                mov bx,cx 
+                mov dh,[arregloTemp  + bx]          ; arreglo[i]
+
+                cmp dl,dh 
+                jle salto 
+
+                mov [arregloTemp  + bx],dl          ; arreglo[i] = arreglo[i - mitad]
+                mov bx,cx 
+                sub bx,ax 
+                mov [arregloTemp + bx],dh           ; arreglo[i - mitad] = arreglo[i]
+                
+                mov contador,1d
+                salto:
+                graficarPaso
+                inc cx 
+                jmp for
+            finfor:
+
+            jmp while
+
+        finwhile:
+
+        
+
+        ;graficarPaso
+        mov bx,2d 
+        div bl 
+        jmp recursividad
+        
+    fin:
+
+endm
+
 
