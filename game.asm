@@ -83,8 +83,8 @@ endm
         msgOrdenamiento db 10,"1) Ascendente",10,"2) Descendente",10,"$"
 
         msgSesionAdmin db 10,"1) Top 10 Puntos",10,"2) Top 10 Tiempo",10,"3) Salir",10,"$"
-        msgTipoOrdenamiento db 10,"1) Ordenamiento BubbleSort",10,"2) Ordenamiento QuickSort",10,"3) Ordenamiento ShellSort"
-    
+        msgTipoOrdenamiento db 10,"1) Ordenamiento BubbleSort",10,"2) Ordenamiento QuickSort",10,"3) Ordenamiento ShellSort$"
+        msgVelocidad db 10,"Ingrese una Velocidad(0-9)",10,"$"
     ;################################################## USUARIOS ######################################################
         usuario db 9 DUP('$')
         contrasenia db 6 DUP('$')
@@ -149,6 +149,11 @@ endm
         valorMayor dw ?
         colorGrafica db ?
         ordenamiento db ?
+        tiempoOrdenamiento db ?
+        velocidadOrdenamiento db 2 DUP("$")
+        auxiliarVelocidad db ?
+        contadorVelocidad db ?
+        velocidadTiempo dw ?
 
     ;################################## QUICK SORT ####################################
         i dw ?
@@ -440,18 +445,31 @@ main proc
         jmp Administrador
     
     quicksort:
+        
+
         tipoOrdenamiento
-        graficarPaso
+        clearScreen 
+        mostrarCadena msgVelocidad
+        ingresarCaracter
+        controlVelocidad
         xor ax,ax
         mov al,cantidadRegistros
         dec ax
         mov temp,ax
-
+        mov segundos,0d 
+        mov minutos,0d
+        mov contadorVelocidad,0d
         ordenamientoQuickSort 0d,temp
         
         clearScreen
         modoVideo
+
+        printNumero minutos,60,0
+        printCaracter 62,0,":"
+        printNumero segundos,63,0
         graficarArreglo 1d
+        
+        
         ingresarCaracter
         modoConsola
         jmp Administrador

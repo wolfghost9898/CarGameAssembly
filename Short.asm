@@ -123,6 +123,8 @@ graficarArreglo macro tiempo
         printNumero temporal2,temporal,22d
         
         add posicionGrafica,5d
+        
+        cronometroGrafica
         delay tiempo
         inc bx 
         jmp recursividad
@@ -355,7 +357,7 @@ partition macro arreglo,primero,ultimo
         graficarPaso
         inc cx 
         jmp recursividad 
-
+        
 
     fin:
         mov bx,i 
@@ -372,7 +374,7 @@ partition macro arreglo,primero,ultimo
     inc bx 
     mov temp2,bx
 
-    graficarPaso
+    ;graficarPaso
     pop dx 
     pop cx 
     pop bx 
@@ -381,6 +383,7 @@ endm
 
 ;Grafica cada paso del ordenamiento
 graficarPaso macro
+    LOCAL salto
     push ax 
     push bx 
     push cx 
@@ -390,9 +393,13 @@ graficarPaso macro
     xor bx,bx 
     xor cx,cx
     xor cx,cx
-    modoVideo 
-    graficarArreglo 1000d
+    modoVideo
+    
+    graficarArreglo velocidadTiempo
     modoConsola
+    
+    
+    
 
 
     pop dx 
@@ -556,6 +563,133 @@ tipoOrdenamiento macro
     ascendente:
         mov ordenamiento,1d         ;Ascendente 
     fin:
+endm
+
+;Tiempo que tendra el delay para las graficas
+controlVelocidad macro
+    LOCAL cero,uno,dos,tres,cuatro,cinco,seis,siete,ocho,fin
+
+    cmp bl,'0'
+    je cero 
+
+    cmp bl,'1'
+    je uno
+
+    cmp bl,'2'
+    je dos
+
+    cmp bl,'3'
+    je tres
+
+    cmp bl,'4'
+    je cuatro
+
+    cmp bl,'5'
+    je cinco
+
+    cmp bl,'6'
+    je seis
+
+    cmp bl,'7'
+    je siete
+
+    cmp bl,'8'
+    je ocho
+    
+    mov [velocidadOrdenamiento + 0],'9'
+    mov velocidadTiempo,1300d
+    mov auxiliarVelocidad,1d
+    jmp fin
+
+    cero:
+        mov [velocidadOrdenamiento + 0],'0'
+        mov velocidadTiempo,130d
+        mov auxiliarVelocidad,11d
+        jmp fin 
+
+    uno:
+        mov [velocidadOrdenamiento + 0],'1'
+        mov velocidadTiempo,260d
+        mov auxiliarVelocidad,6d
+        jmp fin 
+    
+    dos:
+        mov [velocidadOrdenamiento + 0],'2'
+        mov velocidadTiempo,390d
+        mov auxiliarVelocidad,4d
+        jmp fin
+    
+    tres:
+        mov [velocidadOrdenamiento + 0],'3'
+        mov velocidadTiempo,520d
+        mov auxiliarVelocidad,3d
+        jmp fin
+    
+    cuatro:
+        mov [velocidadOrdenamiento + 0],'4'
+        mov velocidadTiempo,650d
+        mov auxiliarVelocidad,2d
+        jmp fin
+
+    cinco:
+        mov [velocidadOrdenamiento + 0],'5'
+        mov velocidadTiempo,780d
+        mov auxiliarVelocidad,2d
+        jmp fin
+
+    seis:
+        mov [velocidadOrdenamiento + 0],'6'
+        mov velocidadTiempo,910d
+        mov auxiliarVelocidad,2d
+        jmp fin
+
+    siete:
+        mov [velocidadOrdenamiento + 0],'7'
+        mov velocidadTiempo,1040d
+        mov auxiliarVelocidad,1d
+        jmp fin
+
+    ocho:
+        mov [velocidadOrdenamiento + 0],'8'
+        mov velocidadTiempo,1170d
+        mov auxiliarVelocidad,1d
+        jmp fin
+    
+    
+    fin:
+endm
+
+;Valida cuanto tiempo ha pasado cuando se grafica la grafica
+cronometroGrafica macro
+    LOCAL salto,sumar
+    push ax 
+    push bx 
+    push cx 
+    push dx 
+    
+    
+    mov bl,contadorVelocidad 
+    cmp bl,auxiliarVelocidad
+    jle sumar 
+
+    mov contadorVelocidad,0d 
+    inc segundos
+    printNumero minutos,60,0
+    printCaracter 62,0,":"
+    printNumero segundos,63,0
+    
+    jmp salto
+    
+    sumar: 
+        inc contadorVelocidad
+
+    salto:
+    
+    
+    pop dx 
+    pop cx 
+    pop bx
+    pop ax
 endm
 
 
