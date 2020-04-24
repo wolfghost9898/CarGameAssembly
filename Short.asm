@@ -71,7 +71,7 @@ endm
 
 ;Graficamos el arreglo en su estado actual 
 graficarArreglo macro tiempo
-    LOCAL recursividad,fin
+    LOCAL recursividad,fin,salto
 
     push bx 
     push ax
@@ -124,7 +124,11 @@ graficarArreglo macro tiempo
         
         add posicionGrafica,5d
         
+        cmp flagContar,0d
+        je salto
+        
         cronometroGrafica
+        salto:
         delay tiempo
         inc bx 
         jmp recursividad
@@ -670,13 +674,11 @@ cronometroGrafica macro
     
     mov bl,contadorVelocidad 
     cmp bl,auxiliarVelocidad
-    jle sumar 
+    jl sumar 
 
     mov contadorVelocidad,0d 
     inc segundos
-    printNumero minutos,60,0
-    printCaracter 62,0,":"
-    printNumero segundos,63,0
+    
     
     jmp salto
     
@@ -684,7 +686,9 @@ cronometroGrafica macro
         inc contadorVelocidad
 
     salto:
-    
+    printNumero minutos,60,0
+    printCaracter 62,0,":"
+    printNumero segundos,63,0
     
     pop dx 
     pop cx 
@@ -692,4 +696,47 @@ cronometroGrafica macro
     pop ax
 endm
 
+;Muestra una grafica esperando una tecla para continuar
+graficaEstatica macro
+    mov flagContar,0d
+    modoVideo
+    
+    mostrarNombreOrdenamiento
+    printCadena 54,0,msgTiempo
+    printNumero minutos,61,0
+    printCaracter 63,0,":"
+    printNumero segundos,64,0
+    printCadena 68,0,msgVelocidadP
+    printCadena 78,0,velocidadOrdenamiento
+
+    graficarArreglo 1d
+    ingresarCaracter
+    modoConsola
+endm
+
+;Mostrarmos que tipo de Ordenamiento es
+mostrarNombreOrdenamiento macro 
+    LOCAL quick,fin,bubble
+
+    cmp tipoOrdenamientoN,0d 
+    je quick 
+
+    cmp tipoOrdenamientoN,1d 
+    je bubble 
+
+    printCadena 2,0,nombreShellSort
+    jmp fin
+
+
+    quick: 
+        printCadena 2,0,nombreQuickSort
+
+    jmp fin
+    
+    bubble:
+        printCadena 2,0,nombreBubbleSort
+    
+    fin:
+
+endm
 

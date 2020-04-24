@@ -85,6 +85,9 @@ endm
         msgSesionAdmin db 10,"1) Top 10 Puntos",10,"2) Top 10 Tiempo",10,"3) Salir",10,"$"
         msgTipoOrdenamiento db 10,"1) Ordenamiento BubbleSort",10,"2) Ordenamiento QuickSort",10,"3) Ordenamiento ShellSort$"
         msgVelocidad db 10,"Ingrese una Velocidad(0-9)",10,"$"
+
+        msgTiempo db "Tiempo:$","$"
+        msgVelocidadP db "Velocidad:$"
     ;################################################## USUARIOS ######################################################
         usuario db 9 DUP('$')
         contrasenia db 6 DUP('$')
@@ -154,6 +157,12 @@ endm
         auxiliarVelocidad db ?
         contadorVelocidad db ?
         velocidadTiempo dw ?
+        flagContar db ?
+
+        nombreQuickSort db "QuickSort$"
+        nombreBubbleSort db "BubbleSort$"
+        nombreShellSort db "ShellSort$"
+        tipoOrdenamientoN db ?
 
     ;################################## QUICK SORT ####################################
         i dw ?
@@ -445,6 +454,9 @@ main proc
         jmp Administrador
     
     quicksort:
+        mov tipoOrdenamientoN,0d
+        mov segundos,0d 
+        mov minutos,0d
         
 
         tipoOrdenamiento
@@ -452,50 +464,59 @@ main proc
         mostrarCadena msgVelocidad
         ingresarCaracter
         controlVelocidad
+        graficaEstatica
         xor ax,ax
         mov al,cantidadRegistros
         dec ax
         mov temp,ax
-        mov segundos,0d 
-        mov minutos,0d
-        mov contadorVelocidad,0d
+        mov flagContar,1d
         ordenamientoQuickSort 0d,temp
         
         clearScreen
-        modoVideo
+        graficaEstatica
 
-        printNumero minutos,60,0
-        printCaracter 62,0,":"
-        printNumero segundos,63,0
-        graficarArreglo 1d
-        
-        
-        ingresarCaracter
-        modoConsola
         jmp Administrador
 
     bubblesort:
-        tipoOrdenamiento
-        graficarPaso
-        ordenamientoBubbleSort 
+        mov tipoOrdenamientoN,1d
+        mov segundos,0d 
+        mov minutos,0d
 
+        tipoOrdenamiento
         clearScreen
-        modoVideo
-        graficarArreglo 1d 
+        mostrarCadena msgVelocidad
         ingresarCaracter
+        controlVelocidad
+        graficaEstatica
+        
+        mov flagContar,1d
+        ordenamientoBubbleSort 
+        
+        clearScreen
+        graficaEstatica
         modoConsola
 
         jmp Administrador
 
 
     shellshort:
+        mov tipoOrdenamientoN,2d
+        mov segundos,0d 
+        mov minutos,0d
+        
         tipoOrdenamiento
-        graficarPaso
-        ordenamientoShellSort
-        clearScreen
-        modoVideo
-        graficarArreglo 1d 
+        clearScreen 
+        mostrarCadena msgVelocidad
         ingresarCaracter
+        controlVelocidad
+        graficaEstatica
+
+        mov flagContar,1d
+
+        ordenamientoShellSort
+        
+        clearScreen
+        graficaEstatica
         modoConsola
 
         jmp Administrador
