@@ -18,9 +18,11 @@ endm
 ;########################## MOSTRAR UNA CARACTER     ###################
 ;##############################################################################
 mostrarCaracter macro caracter
+   push ax
    mov ah,2
    mov dl,caracter
    int 21h
+   pop ax
 endm
 ;##############################################################################
 ;########################## PEDIR UN CARACTER      ###################
@@ -29,6 +31,59 @@ ingresarCaracter macro
    mov ah,1
    int 21h
    mov bl,al
+endm
+
+;##############################################################################
+;########################## MOSTRAR UN NUMERO    ###################
+;##############################################################################
+printNumeroConsola macro
+    LOCAL unidad,decena,fin,cero
+    push ax 
+    push bx 
+    push cx 
+    push dx 
+
+    xor cx,cx 
+    xor bx,bx
+    
+    cmp ax,10d
+    jl cero 
+
+    decena:
+        cmp al,0d 
+        je unidad 
+
+        xor dx,dx 
+        mov bx,10d 
+        div bx
+        push dx 
+        inc cx
+        
+        jmp decena
+
+    cero:
+        add ax,48d 
+        mostrarCaracter al
+        jmp fin 
+
+
+    unidad:
+        
+        cmp cx,0d 
+        je fin 
+            pop dx
+            add dx,48d 
+            mostrarCaracter dl
+        dec cx
+        jmp unidad
+
+    fin:
+
+    pop dx
+    pop cx 
+    pop bx 
+    pop ax
+
 endm
 
 ;##############################################################################
@@ -165,6 +220,9 @@ endm
         nombreBubbleSort db "BubbleSort$"
         nombreShellSort db "ShellSort$"
         tipoOrdenamientoN db ?
+
+        msgTopPuntaje db "Top Puntaje$"
+        msgTopTiempo db "Top Tiempo$"
 
     ;################################## QUICK SORT ####################################
         i dw ?
@@ -436,6 +494,10 @@ main proc
         leerArchivo
         cerrarArchivo
         cargarPuntaje
+        ordenarTop10
+        mostrarTop msgTopPuntaje
+        ingresarCaracter
+
         jmp escogerOrdenamiento
 
         
@@ -447,14 +509,13 @@ main proc
         leerArchivo 
         cerrarArchivo 
         cargarTiempo
+        ordenarTop10 
+        mostrarTop msgTopTiempo 
+        ingresarCaracter 
 
 
     escogerOrdenamiento:
-        modoVideo
-        graficarArreglo 1d
-        
-        ingresarCaracter         
-        modoConsola 
+        clearScreen
         mostrarCadena msgTipoOrdenamiento
         mostrarCaracter 10d
         ingresarCaracter

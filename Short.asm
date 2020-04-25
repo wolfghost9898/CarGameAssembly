@@ -789,3 +789,216 @@ mostrarNombreOrdenamiento macro
 
 endm
 
+
+;Generar un top 10 
+ordenarTop10 macro
+    LOCAL recursividad,fin,recursividad2,fin2,salto
+    push ax 
+    push bx
+    push cx
+    push dx 
+
+    xor bx,bx 
+    xor ax,ax
+    xor cx,cx 
+
+    mov al,cantidadRegistros
+    mov bx,2d 
+    mul bx 
+    mov temp,ax
+    xor ax,ax
+    xor bx,bx
+    xor dx,dx
+    inc ax
+    recursividad:
+        cmp ax,temp 
+        jge fin
+
+        mov cx,1d
+        
+        
+        recursividad2: 
+            cmp cx,temp
+            jge fin2 
+            mov bx,ax 
+            mov dl,[arreglo + bx]
+            mov bx,cx 
+            mov dh,[arreglo + bx]
+
+            cmp dl,dh
+            jle salto
+
+            hacerCambio ax,cx
+            
+            salto:
+            
+            add cx,2d
+            jmp recursividad2
+
+        fin2:
+
+        add ax,2d 
+        jmp recursividad
+
+
+    fin:
+
+
+    pop dx
+    pop cx
+    pop bx 
+    pop ax
+endm
+
+;Hace el cambio de la posicion actual con la posicion siguiente
+hacerCambio macro posicion,posicion2
+    push bx 
+    push ax 
+    push dx 
+
+
+    mov bx,posicion
+    dec bx 
+    mov dl,[arreglo + bx]
+    mov bx,posicion2
+    dec bx 
+    mov dh,[arreglo + bx]
+    mov bx,posicion 
+    dec bx 
+    mov [arreglo + bx],dh 
+    mov bx,posicion2 
+    dec bx 
+    mov [arreglo + bx],dl
+
+
+
+    pop dx
+
+
+    mov bx,posicion 
+    mov [arreglo + bx],dh 
+    mov bx,posicion2
+    mov [arreglo + bx],dl
+
+    pop ax 
+    pop bx
+endm
+
+;Muestra el Top 10 de Puntajes/Tiempo
+mostrarTop macro cadena
+    LOCAL recursividad,fin
+    push ax 
+    push bx 
+    push cx 
+
+    mostrarEspacios 32d
+    mostrarCadena cadena
+    mostrarCaracter 10d
+
+    xor ax,ax 
+    recursividad:
+        cmp al,cantidadRegistros
+        jge fin 
+        cmp ax,20d 
+        jg fin
+        
+        inc ax 
+        printNumeroConsola 
+        mostrarCaracter "."
+        mostrarEspacios 5d
+        dec ax 
+        push ax 
+        mov bx,2d 
+        mul bx 
+        mov bx,ax
+        mov al,[arreglo + bx]
+        mov temporal,al
+        mostrarNombre temporal
+        mostrarEspacios 5d
+        inc bx 
+        xor ax,ax 
+        mov al,[arreglo + bx]
+        printNumeroConsola
+        
+
+
+        pop ax
+        
+        
+        mostrarCaracter 10d
+        inc ax 
+        jmp recursividad
+    fin:
+    pop cx 
+    pop bx 
+    pop cx
+endm
+
+;Macro para mostrar una cantidad de espacios seguidas
+mostrarEspacios macro cantidad
+    LOCAL espacios,salto 
+    push ax 
+
+    xor ax,ax 
+    espacios: 
+        cmp ax,33d 
+        jge salto 
+        
+        mostrarCaracter 32d
+
+        inc ax 
+        jmp espacios
+    salto:
+
+
+    pop ax
+endm
+
+;Mostrar el nombre al que le corresponde el punteo
+mostrarNombre macro fila
+    LOCAL recursividad,fin,salto,recursividad2,salto2,nombre
+    push ax 
+    push bx 
+    push cx 
+    push dx 
+    xor ax,ax
+    xor bx,bx 
+
+    recursividad:
+        cmp al,fila 
+        jge nombre  
+
+        recursividad2:
+            cmp bx,fileSize
+            jge fin
+            mov cl,[buffer + bx]
+            cmp cl,10d 
+            je salto2 
+
+            inc bx 
+            jmp recursividad2
+
+            salto2:
+                inc bx
+
+        inc ax 
+        jmp recursividad
+
+
+    nombre:
+        mov cl,[buffer + bx]
+        cmp cl,59d 
+        je fin 
+
+        mostrarCaracter cl
+        inc bx 
+        jmp nombre
+
+    
+    fin:
+
+    pop dx 
+    pop cx 
+    pop bx 
+    pop ax
+endm

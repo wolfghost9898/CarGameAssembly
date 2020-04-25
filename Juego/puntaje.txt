@@ -1,5 +1,5 @@
-carlo2;80;50
-mama;25;5
-mama;25;25
-mama;25;2
-mama;25;1
+carlo2;20;50
+caca;23;10
+asdasda;36;10
+maria;12;5
+pedo;1;55
