@@ -1,6 +1,6 @@
 
 
-;Carga los valores de puntaje/tiempo al arreglo, guardando la posicion original 
+;Carga los valores de puntaje al arreglo, guardando la posicion original 
 cargarPuntaje macro
     LOCAL nombre,fin,salto
     mov cantidadRegistros,0d
@@ -39,10 +39,52 @@ cargarPuntaje macro
 
 endm
 
+;Cargar los valores de tiempo al arreglo,guardando la posicion original 
+cargarTiempo macro
+    LOCAL nombre,fin,salto
+    mov cantidadRegistros,0d
+    mov posicionActual,0d
+    push bx 
+    push cx 
+
+    xor cx,cx
+    xor bx,bx 
+    nombre: 
+        mov bx,posicionActual
+        mov cl,[buffer + bx]
+        cmp bx,fileSize 
+        jge fin
+        cmp cl,59
+        je salto                      ;Si llegamos a la primera punto y coma nos saltamos el nombre
+        inc posicionActual
+        inc bx 
+        jmp nombre
+
+
+    salto:
+        inc posicionActual
+        getNumber
+        xor ax,ax
+        getNumber
+        guardarArreglo
+
+        
+        mov bx,posicionActual 
+        cmp bx,fileSize 
+        jl nombre 
+    fin:
+
+    pop cx
+    pop bx
+
+endm
+
+
 ;Almacena un valor en el arreglo
 guardarArreglo macro
     push bx 
     push ax
+    
     xor bx,bx 
     xor ax,ax 
     mov al,cantidadRegistros
@@ -104,6 +146,7 @@ graficarArreglo macro tiempo
     mov al,cantidadRegistros 
     xor bx,bx
     recursividad:
+        
         cmp bx,ax
         jge fin
         push ax
@@ -119,7 +162,7 @@ graficarArreglo macro tiempo
         
         posicionNumero posicionGrafica
         graficarRectangulo cx,colorGrafica
-        
+        playSound
         printNumero temporal2,temporal,22d
         
         add posicionGrafica,5d
@@ -130,6 +173,7 @@ graficarArreglo macro tiempo
         cronometroGrafica
         salto:
         delay tiempo
+        
         inc bx 
         jmp recursividad
     fin:
@@ -243,24 +287,29 @@ configurarGrafica macro numero
     cmp numero,80d 
     jle verde 
 
-    mov colorGrafica,15d 
+    mov colorGrafica,15d
+    mov frequencyGraph,1292d 
     jmp fin
 
     verde: 
-        mov colorGrafica,2d 
+        mov colorGrafica,2d
+        mov frequencyGraph,1612d  
         jmp fin
 
     amarillo: 
-        mov colorGrafica,14d 
+        mov colorGrafica,14d
+        mov frequencyGraph,2280d  
         jmp fin 
 
 
     azul: 
-        mov colorGrafica,1d 
+        mov colorGrafica,1d
+        mov frequencyGraph,3834d  
         jmp fin
 
     rojo: 
         mov colorGrafica,4d
+        mov frequencyGraph,9121d 
     
     fin:
 endm
@@ -601,26 +650,26 @@ controlVelocidad macro
     je ocho
     
     mov [velocidadOrdenamiento + 0],'9'
-    mov velocidadTiempo,1300d
+    mov velocidadTiempo,1100d
     mov auxiliarVelocidad,1d
     jmp fin
 
     cero:
         mov [velocidadOrdenamiento + 0],'0'
         mov velocidadTiempo,130d
-        mov auxiliarVelocidad,11d
+        mov auxiliarVelocidad,12d
         jmp fin 
 
     uno:
         mov [velocidadOrdenamiento + 0],'1'
         mov velocidadTiempo,260d
-        mov auxiliarVelocidad,6d
+        mov auxiliarVelocidad,9d
         jmp fin 
     
     dos:
         mov [velocidadOrdenamiento + 0],'2'
         mov velocidadTiempo,390d
-        mov auxiliarVelocidad,4d
+        mov auxiliarVelocidad,6d
         jmp fin
     
     tres:
@@ -637,25 +686,25 @@ controlVelocidad macro
 
     cinco:
         mov [velocidadOrdenamiento + 0],'5'
-        mov velocidadTiempo,780d
+        mov velocidadTiempo,700d
         mov auxiliarVelocidad,2d
         jmp fin
 
     seis:
         mov [velocidadOrdenamiento + 0],'6'
-        mov velocidadTiempo,910d
+        mov velocidadTiempo,710d
         mov auxiliarVelocidad,2d
         jmp fin
 
     siete:
         mov [velocidadOrdenamiento + 0],'7'
-        mov velocidadTiempo,1040d
+        mov velocidadTiempo,840d
         mov auxiliarVelocidad,1d
         jmp fin
 
     ocho:
         mov [velocidadOrdenamiento + 0],'8'
-        mov velocidadTiempo,1170d
+        mov velocidadTiempo,970d
         mov auxiliarVelocidad,1d
         jmp fin
     

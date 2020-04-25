@@ -848,7 +848,9 @@ getNumber macro
        
         cmp cl,59d
         je convertir ;Si es un punto y coma entonces procedemos a convertir el numero 
-        cmp cl,10d 
+        cmp cl,10d  ;Salto de linea
+        je convertir
+        cmp cl,13d  ;Retorno de carro
         je convertir
 
         cmp bx,fileSize 

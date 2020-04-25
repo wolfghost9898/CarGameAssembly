@@ -1,4 +1,5 @@
-carlos;04;3
-carlo2;10;4
-carlos;04;3
-carlo2;10;4
+carlo2;80;50
+mama;25;5
+mama;25;25
+mama;25;2
+mama;25;1

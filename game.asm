@@ -2,6 +2,7 @@ include File.asm
 include Usuario/Usuario.asm
 include Juego/Juego.asm
 include Short.asm
+include Sonido.asm
 
 ;##############################################################################
 ;########################## MOSTRAR UNA CADENA     ###################
@@ -151,6 +152,7 @@ endm
         posicionGrafica dw ?
         valorMayor dw ?
         colorGrafica db ?
+        frequencyGraph dw ?
         ordenamiento db ?
         tiempoOrdenamiento db ?
         velocidadOrdenamiento db 2 DUP("$")
@@ -422,6 +424,9 @@ main proc
         cmp bl,'1'
         je topPuntaje
 
+        cmp bl,'2' 
+        je topTiempo
+
         jmp fin 
 
     topPuntaje:
@@ -430,9 +435,21 @@ main proc
         abrirArchivo direccionPuntaje
         leerArchivo
         cerrarArchivo
-        
         cargarPuntaje
+        jmp escogerOrdenamiento
+
         
+    
+    
+    topTiempo:
+        clearScreen
+        abrirArchivo direccionPuntaje
+        leerArchivo 
+        cerrarArchivo 
+        cargarTiempo
+
+
+    escogerOrdenamiento:
         modoVideo
         graficarArreglo 1d
         
@@ -452,7 +469,7 @@ main proc
         je shellshort
         
         jmp Administrador
-    
+
     quicksort:
         mov tipoOrdenamientoN,0d
         mov segundos,0d 
