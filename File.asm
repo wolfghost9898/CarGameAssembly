@@ -109,4 +109,48 @@ corregirDireccion macro actual,destino
 endm
 
 
+;Escribimos una cadena en un archivo 
+escribirCadenaArchivo macro cadena,cantidad
+    push ax
+    push bx 
+    push cx 
+    push dx 
+
+
+    mov ah,40h
+    mov bx,filehandle
+    mov cx,cantidad 
+    mov dx, offset cadena 
+
+    int 21h 
+    
+    pop dx 
+    pop cx
+    pop bx
+    pop ax
+endm
+
+;Escribimos un caracter en el archivo 
+escribirCaracterArchivo macro caracter
+    push ax
+    push bx 
+    push cx 
+    push dx 
+
+    mov [cadenaTemp + 0],caracter
+
+    mov ah,40h
+    mov bx,filehandle
+    mov cx,1 
+    mov dx, offset cadenaTemp 
+
+    int 21h 
+    
+    pop dx 
+    pop cx
+    pop bx
+    pop ax
+endm
+
+
 

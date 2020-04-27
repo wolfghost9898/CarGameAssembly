@@ -893,7 +893,11 @@ mostrarTop macro cadena
 
     mostrarEspacios 32d
     mostrarCadena cadena
+    mov cx,SIZEOF cadena
+    dec cx
+    escribirCadenaArchivo cadena,cx
     mostrarCaracter 10d
+    escribirCaracterArchivo 10d 
 
     xor ax,ax 
     recursividad:
@@ -905,6 +909,7 @@ mostrarTop macro cadena
         inc ax 
         printNumeroConsola 
         mostrarCaracter "."
+        escribirCaracterArchivo '.'
         mostrarEspacios 5d
         dec ax 
         push ax 
@@ -926,6 +931,7 @@ mostrarTop macro cadena
         
         
         mostrarCaracter 10d
+        escribirCaracterArchivo 10d
         inc ax 
         jmp recursividad
     fin:
@@ -945,7 +951,7 @@ mostrarEspacios macro cantidad
         jge salto 
         
         mostrarCaracter 32d
-
+        escribirCaracterArchivo 32d
         inc ax 
         jmp espacios
     salto:
@@ -991,6 +997,7 @@ mostrarNombre macro fila
         je fin 
 
         mostrarCaracter cl
+        escribirCaracterArchivo cl
         inc bx 
         jmp nombre
 

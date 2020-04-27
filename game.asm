@@ -34,7 +34,7 @@ ingresarCaracter macro
 endm
 
 ;##############################################################################
-;########################## MOSTRAR UN NUMERO    ###################
+;########################## MOSTRAR UN NUMERO en consola y lo guarda en un archivo    ###################
 ;##############################################################################
 printNumeroConsola macro
     LOCAL unidad,decena,fin,cero
@@ -64,6 +64,7 @@ printNumeroConsola macro
     cero:
         add ax,48d 
         mostrarCaracter al
+        escribirCaracterArchivo al
         jmp fin 
 
 
@@ -74,6 +75,7 @@ printNumeroConsola macro
             pop dx
             add dx,48d 
             mostrarCaracter dl
+            escribirCaracterArchivo dl
         dec cx
         jmp unidad
 
@@ -230,6 +232,9 @@ endm
         pivote db ?
         first dw ?
         last dw ?
+    ;############################### REPORTES ########################################
+        direccionReporte db "C:\p1\Juego\Puntaje.rep",0
+        cadenaTemp db 2 DUP("$")
 
 .code
 main proc
@@ -494,8 +499,11 @@ main proc
         leerArchivo
         cerrarArchivo
         cargarPuntaje
+
+        crearArchivo direccionReporte
         ordenarTop10
         mostrarTop msgTopPuntaje
+        cerrarArchivo
         ingresarCaracter
 
         jmp escogerOrdenamiento
@@ -509,8 +517,10 @@ main proc
         leerArchivo 
         cerrarArchivo 
         cargarTiempo
+        crearArchivo direccionReporte
         ordenarTop10 
-        mostrarTop msgTopTiempo 
+        mostrarTop msgTopTiempo
+        cerrarArchivo 
         ingresarCaracter 
 
 
