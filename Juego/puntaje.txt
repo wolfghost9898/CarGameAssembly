@@ -1,5 +1,1 @@
-carlo2;20;50
-caca;23;10
-asdasda;36;10
-maria;12;5
-pedo;1;55
+Hola;3;50

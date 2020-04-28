@@ -149,6 +149,7 @@ endm
     ;################################################## USUARIOS ######################################################
         usuario db 9 DUP('$')
         contrasenia db 6 DUP('$')
+        tamUsuario db 1 DUP(0)
 
     ;################################################# ARCHIVOS ##################################################
        
@@ -189,7 +190,7 @@ endm
         tiempoNivel dw ?
         tiempoActual dw ? 
         nivelActual dw ?
-
+        tiempoTotal dw ?
 
         colorCarro db ?
     ;################################## OTROS ####################################
@@ -267,6 +268,8 @@ main proc
         
         mostrarCaracter 10
         leerArchivo
+        mov cl,usuario + 1
+        mov tamUsuario,cl
         buscarUsuario usuario + 2
         
         cmp bl,1d
@@ -407,6 +410,7 @@ main proc
         mov tiempoActual,0d 
         mov nivelActual,1d
         
+        mov tiempoTotal,0d
         
         clearScreen 
         modoVideo
@@ -453,8 +457,9 @@ main proc
         inc tiempoAmarilloTemp
         inc tiempoVerdeTemp
 
+        inc tiempoTotal
         cmp puntaje,0d 
-        jl fin
+        jl finJuego
 
         controlTiempo
         
@@ -467,13 +472,16 @@ main proc
     controlFin: 
         mov bx,posicionActual 
         cmp bx,fileSize
-        jge fin 
+        jge finJuego 
 
         mov tiempoActual,0d 
         cargarNivel
         inc nivelActual
         jmp Escenario
     
+    finJuego:
+        guardarPuntaje
+        jmp fin
     ;#############################################################################################################################
     ;##################################################### ADMINISTRADOR #####################################################
     ;############################################################################################################################

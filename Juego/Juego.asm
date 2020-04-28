@@ -324,7 +324,7 @@ printHUD macro
     printPuntaje
     
     salto:
-
+    printCadena 2,0,usuario + 2
     printNumero minutos,73,0
     printCaracter 75,0,":"
     printNumero segundos,76,0
@@ -827,6 +827,7 @@ cargarNivel macro
     ;Obtenemos el valor del puntaje verde
     getNumber 
     mov puntosVerde,ax
+    inc posicionActual
     fin:
 
     pop cx 
@@ -951,4 +952,41 @@ controlTiempo macro
     fin:
 
     inc tiempoActual
+endm
+
+
+;Guardamos el puntaje del usuario actual 
+guardarPuntaje macro
+    LOCAL salto
+    push ax 
+    push bx 
+    push cx 
+    push dx 
+    abrirArchivo direccionPuntaje
+    mov al,usuario + 1
+    mov ah,0
+    mov tamanio,ax
+    writeAppend usuario + 2,tamanio
+
+    mov cadena,59d 
+    writeAppend cadena,1 
+    mov ax,puntaje
+
+    cmp ax,0d 
+    jge salto 
+
+    mov ax,0d
+    salto:
+    printNumeroFile
+    mov cadena,59d 
+    writeAppend cadena,1 
+    mov ax,50
+    printNumeroFile
+    mov cadena,10d 
+    writeAppend cadena,1 
+    cerrarArchivo
+    pop dx 
+    pop cx 
+    pop bx 
+    pop ax
 endm

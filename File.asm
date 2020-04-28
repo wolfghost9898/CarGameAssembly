@@ -76,12 +76,23 @@ endm
 
 ;Escribimos al final del archivo 
 writeAppend macro cadena,tam
+    push ax 
+    push bx 
+    push cx 
+    push dx 
+
+
     endFile
     mov bx,filehandle
     mov cx,tam
     lea dx,cadena 
     mov ah,40h 
     int 21h
+
+    pop dx 
+    pop cx 
+    pop bx 
+    pop ax
 endm
 
 
@@ -152,5 +163,57 @@ escribirCaracterArchivo macro caracter
     pop ax
 endm
 
+
+printNumeroFile macro
+    LOCAL unidad,decena,fin,cero
+    push ax 
+    push bx 
+    push cx 
+    push dx 
+
+    xor cx,cx 
+    xor bx,bx
+    
+    cmp ax,10d
+    jl cero 
+
+    decena:
+        cmp al,0d 
+        je unidad 
+
+        xor dx,dx 
+        mov bx,10d 
+        div bx
+        push dx 
+        inc cx
+        
+        jmp decena
+
+    cero:
+        add ax,48d
+        mov cadena,al
+        writeAppend cadena,1
+        jmp fin 
+
+
+    unidad:
+        
+        cmp cx,0d 
+        je fin 
+            pop dx
+            add dx,48d 
+            mov cadena,dl
+            writeAppend cadena,1
+        dec cx
+        jmp unidad
+
+    fin:
+
+    pop dx
+    pop cx 
+    pop bx 
+    pop ax
+
+endm
 
 
