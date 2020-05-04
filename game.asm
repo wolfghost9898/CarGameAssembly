@@ -260,12 +260,28 @@ main proc
     ;##################################################### INICIAR SESION #####################################################
     ;############################################################################################################################
     Ingresar:
-        jmp Administrador
         clearScreen
         abrirArchivo direccionUsuario
         mostrarCadena msgUsuario
         ingresarCadena usuario
         
+        userAdmin usuario + 2
+        cmp bx,0d 
+        je noAdmin
+
+        mostrarCaracter 10
+        mostrarCadena msgContrasenia
+        ingresarCadena contrasenia
+
+        passAdmin contrasenia + 2
+        cmp bx,1d
+        je Administrador 
+
+        mostrarCadena msgPasswordErrorN
+        ingresarCaracter
+        jmp Ingresar
+
+        noAdmin:
         mostrarCaracter 10
         leerArchivo
         mov cl,usuario + 1

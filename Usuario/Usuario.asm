@@ -150,3 +150,75 @@ confirmarContra macro password
 
     fin: 
 endm
+
+
+
+;Si el usuario es administrador  
+userAdmin macro usuario
+    LOCAL fin,error
+    xor bx,bx
+    mov cl,[usuario + bx]
+    
+    cmp cl,'a'
+    jne error
+
+    inc bx
+    mov cl,[usuario + bx]
+    cmp cl,'d'
+    jne error
+
+    inc bx
+    mov cl,[usuario + bx]
+    cmp cl,'m'
+    jne error
+
+    inc bx
+    mov cl,[usuario + bx]
+    cmp cl,'i'
+    jne error
+
+    inc bx
+    mov cl,[usuario + bx]
+    cmp cl,'n'
+    jne error
+
+    mov bx,1d
+    jmp fin 
+
+    error:
+        mov bx,0d 
+    fin:
+
+endm
+
+passAdmin macro usuario
+    LOCAL fin,error
+    xor bx,bx
+    mov cl,[usuario + bx]
+    
+    cmp cl,'1'
+    jne error
+
+    inc bx
+    mov cl,[usuario + bx]
+    cmp cl,'2'
+    jne error
+
+    inc bx
+    mov cl,[usuario + bx]
+    cmp cl,'3'
+    jne error
+
+    inc bx
+    mov cl,[usuario + bx]
+    cmp cl,'4'
+    jne error
+
+    mov bx,1d
+    jmp fin 
+
+    error:
+        mov bx,0d 
+    fin:
+
+endm
