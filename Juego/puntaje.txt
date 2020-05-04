@@ -1,2 +1,4 @@
 Hola;3;50
-Hola;6;50
+Hola;3;50
+Hola;3;2
+Hola;3;13

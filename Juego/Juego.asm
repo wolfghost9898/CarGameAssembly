@@ -980,7 +980,7 @@ guardarPuntaje macro
     printNumeroFile
     mov cadena,59d 
     writeAppend cadena,1 
-    mov ax,50
+    mov ax,tiempoTotal
     printNumeroFile
     mov cadena,10d 
     writeAppend cadena,1 

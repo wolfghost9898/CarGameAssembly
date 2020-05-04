@@ -191,6 +191,7 @@ userAdmin macro usuario
 
 endm
 
+;Verificar la Contraseña de admin
 passAdmin macro usuario
     LOCAL fin,error
     xor bx,bx

@@ -440,11 +440,18 @@ main proc
 
         mov ah, 0bh
         int 21h    
+        
         cmp al,0 
         je refresco
 
+        
+
         mov ah,0
         int 16h
+        
+        cmp ah,01h
+        je pausa
+
         cmp AH, 4Dh     
         je derecha
         
@@ -452,7 +459,25 @@ main proc
         je izquierda
 
         printCarro
-        jmp fin
+        jmp refresco
+
+    pausa: 
+        mov ah,0bh 
+        int 21h 
+
+        cmp al,0 
+        je pausa
+        
+        mov ah,0 
+        int 16h     
+
+        cmp ah,01h 
+        je finJuego
+
+        cmp ah,39h 
+        je refresco
+
+        jmp pausa
 
     izquierda:
         moverIzquierda       
@@ -497,7 +522,7 @@ main proc
     
     finJuego:
         guardarPuntaje
-        jmp fin
+        jmp Juego
     ;#############################################################################################################################
     ;##################################################### ADMINISTRADOR #####################################################
     ;############################################################################################################################
