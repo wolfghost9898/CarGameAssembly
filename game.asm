@@ -472,10 +472,10 @@ main proc
         int 16h     
 
         cmp ah,01h 
-        je finJuego
+        je refresco
 
         cmp ah,39h 
-        je refresco
+        je finJuego
 
         jmp pausa
 

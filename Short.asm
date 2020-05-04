@@ -622,88 +622,88 @@ endm
 controlVelocidad macro
     LOCAL cero,uno,dos,tres,cuatro,cinco,seis,siete,ocho,fin
 
-    cmp bl,'0'
+    cmp bl,'9'
     je cero 
 
-    cmp bl,'1'
+    cmp bl,'8'
     je uno
 
-    cmp bl,'2'
+    cmp bl,'7'
     je dos
 
-    cmp bl,'3'
+    cmp bl,'6'
     je tres
 
-    cmp bl,'4'
+    cmp bl,'5'
     je cuatro
 
-    cmp bl,'5'
+    cmp bl,'4'
     je cinco
 
-    cmp bl,'6'
+    cmp bl,'3'
     je seis
 
-    cmp bl,'7'
+    cmp bl,'2'
     je siete
 
-    cmp bl,'8'
+    cmp bl,'1'
     je ocho
     
-    mov [velocidadOrdenamiento + 0],'9'
+    mov [velocidadOrdenamiento + 0],'0'
     mov velocidadTiempo,1100d
     mov auxiliarVelocidad,1d
     jmp fin
 
     cero:
-        mov [velocidadOrdenamiento + 0],'0'
+        mov [velocidadOrdenamiento + 0],'9'
         mov velocidadTiempo,130d
         mov auxiliarVelocidad,12d
         jmp fin 
 
     uno:
-        mov [velocidadOrdenamiento + 0],'1'
+        mov [velocidadOrdenamiento + 0],'8'
         mov velocidadTiempo,260d
         mov auxiliarVelocidad,9d
         jmp fin 
     
     dos:
-        mov [velocidadOrdenamiento + 0],'2'
+        mov [velocidadOrdenamiento + 0],'7'
         mov velocidadTiempo,390d
         mov auxiliarVelocidad,6d
         jmp fin
     
     tres:
-        mov [velocidadOrdenamiento + 0],'3'
+        mov [velocidadOrdenamiento + 0],'6'
         mov velocidadTiempo,520d
         mov auxiliarVelocidad,3d
         jmp fin
     
     cuatro:
-        mov [velocidadOrdenamiento + 0],'4'
+        mov [velocidadOrdenamiento + 0],'5'
         mov velocidadTiempo,650d
         mov auxiliarVelocidad,2d
         jmp fin
 
     cinco:
-        mov [velocidadOrdenamiento + 0],'5'
+        mov [velocidadOrdenamiento + 0],'4'
         mov velocidadTiempo,700d
         mov auxiliarVelocidad,2d
         jmp fin
 
     seis:
-        mov [velocidadOrdenamiento + 0],'6'
+        mov [velocidadOrdenamiento + 0],'3'
         mov velocidadTiempo,710d
         mov auxiliarVelocidad,2d
         jmp fin
 
     siete:
-        mov [velocidadOrdenamiento + 0],'7'
+        mov [velocidadOrdenamiento + 0],'2'
         mov velocidadTiempo,840d
         mov auxiliarVelocidad,1d
         jmp fin
 
     ocho:
-        mov [velocidadOrdenamiento + 0],'8'
+        mov [velocidadOrdenamiento + 0],'1'
         mov velocidadTiempo,970d
         mov auxiliarVelocidad,1d
         jmp fin
