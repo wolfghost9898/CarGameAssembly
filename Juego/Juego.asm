@@ -816,17 +816,21 @@ cargarNivel macro
     getNumber
     mov tiempoAmarillo,al
 
-    ;Obtenemos el color 
-    getColor 
-    mov colorCarro,al
+    ;Obtenemos el valor del puntaje verde
+    getNumber 
+    mov puntosVerde,ax
 
     ;Obtenemos el valor del puntaje amarillo 
     getNumber 
     mov puntosAmarillo,ax
 
-    ;Obtenemos el valor del puntaje verde
-    getNumber 
-    mov puntosVerde,ax
+    ;Obtenemos el color 
+    getColor 
+    mov colorCarro,al
+
+    
+
+    
     inc posicionActual
     fin:
 

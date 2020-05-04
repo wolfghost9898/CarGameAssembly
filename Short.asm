@@ -714,7 +714,7 @@ endm
 
 ;Valida cuanto tiempo ha pasado cuando se grafica la grafica
 cronometroGrafica macro
-    LOCAL salto,sumar
+    LOCAL salto,sumar,min 
     push ax 
     push bx 
     push cx 
@@ -726,8 +726,15 @@ cronometroGrafica macro
     jl sumar 
 
     mov contadorVelocidad,0d 
+    cmp segundos,60d 
+    jge min 
+
     inc segundos
-    
+    jmp salto 
+
+    min: 
+        mov segundos,0d 
+        inc minutos
     
     jmp salto
     

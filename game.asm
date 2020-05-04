@@ -163,7 +163,8 @@ endm
         buffer db 4000 dup (?), '$'
 
         direccionCarga db 30 DUP("$")
-        fileCarga db "C:\p1\Juego\db.ply",0
+        ;fileCarga db "C:\p1\Juego\db.ply",0
+        fileCarga db 30 DUP(0)
 
     ;######################################### JUEGO ###############################
         carroI dw ? 
@@ -246,8 +247,7 @@ main proc
         clearScreen
         mostrarCadena msgSesion
 
-        ;ingresarCaracter
-        mov bl,'1'
+        ingresarCaracter
         cmp bl,'1'
         je Ingresar 
         cmp bl,'2'
@@ -388,9 +388,9 @@ main proc
 
     cargarJuego:
         clearScreen 
-        ;mostrarCadena msgCarga
-        ;ingresarCadena direccionCarga 
-        ;corregirDireccion direccionCarga,fileCarga ; Eliminamos el \n al final y agregamos un 0
+        mostrarCadena msgCarga
+        ingresarCadena direccionCarga 
+        corregirDireccion direccionCarga,fileCarga ; Eliminamos el \n al final y agregamos un 0
         abrirArchivo fileCarga ;Abrimos el archivo en lectura/escritura
         
         cmp bx,0d 
