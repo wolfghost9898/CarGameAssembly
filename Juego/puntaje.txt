@@ -6,3 +6,11 @@ wolfh;3;18
 wolfh;7;49
 wolfh;3;72
 Hola;3;31
+Hola;3;30
+Hola;2;32
+Hola;5;26
+Hola;3;15
+Hola;3;20
+Hola;3;87
+Hola;5;52
+Hola;12;67

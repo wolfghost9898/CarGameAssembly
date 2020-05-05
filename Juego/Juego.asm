@@ -762,22 +762,22 @@ endm
 
 ;####################### NOS DEVUELVE UN NUMERO ALEATORIO BASADO EN LOS SEGUNDOS DEL TIEMPO ACTUAL#############
 numeroAleatorio macro
+    LOCAL retorno,fin
     push bx 
+
     
-    mov ah,00h 
-    int 1ah 
+    cmp posicionObjeto,250d 
+    jge retorno 
+
+    add posicionObjeto,35d 
+    jmp fin
+
+
+    retorno: 
+        mov posicionObjeto,40d 
     
-    mov ax,dx
-    xor dx,dx
-    mov bx,10 
-    div bx 
-    inc dx
-    mov ax,dx
-    mov bx,175d 
-    mul bx 
-    mov bx,9d 
-    div bx 
-    add ax,55d
+    fin: 
+        mov ax,posicionObjeto
     pop bx
 endm
 

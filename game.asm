@@ -194,6 +194,7 @@ endm
         tiempoTotal dw ?
 
         nombreNivel db 20 DUP("$")
+        posicionObjeto dw ?
 
         colorCarro db ?
     ;################################## OTROS ####################################
@@ -414,6 +415,7 @@ main proc
     
     configuracion:
         mov posicionActual,0d 
+        mov posicionObjeto,40d
         cargarNivel
         
         mov carroI,150d
