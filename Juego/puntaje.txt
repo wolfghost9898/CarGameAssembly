@@ -5,5 +5,4 @@ Hola;3;13
 wolfh;3;18
 wolfh;7;49
 wolfh;3;72
-Hola;0;24
-Hola;11;97
+Hola;3;31

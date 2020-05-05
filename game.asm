@@ -193,6 +193,8 @@ endm
         nivelActual dw ?
         tiempoTotal dw ?
 
+        nombreNivel db 20 DUP("$")
+
         colorCarro db ?
     ;################################## OTROS ####################################
         temp dw ?

@@ -318,7 +318,7 @@ endm
 ;########################## DIBUJAR HUD ####################
 printHUD macro
     LOCAL salto
-    printCadena 18,0,cadenaNivel
+    printCadena 15,0,nombreNivel
     cmp puntaje,0d 
     jl salto
     printPuntaje
@@ -797,12 +797,7 @@ cargarNivel macro
 
     add posicionActual,6d
     ;Guardamos el nombre del nivel
-    mov [cadenaNivel + 0],'N'
-    mov bx,posicionActual
-    mov cl,[buffer + bx]
-    mov [cadenaNivel + 1],cl 
-    
-    add posicionActual,2d   
+    getNombre
 
     ;Obtenemos el tiempo del nivel
     getNumber
@@ -993,4 +988,38 @@ guardarPuntaje macro
     pop cx 
     pop bx 
     pop ax
+endm
+
+;Obtener el nombre del nivel
+getNombre macro
+    LOCAL fin,recursividad
+    push ax
+    push bx 
+    push cx 
+    
+    xor ax,ax
+    recursividad:
+
+        mov bx,posicionActual 
+        mov cl,[buffer + bx]
+        cmp cl,59d 
+        je fin
+
+        mov bx,ax 
+        mov [nombreNivel + bx],cl
+
+        inc ax 
+        inc posicionActual 
+        jmp recursividad
+
+
+
+    fin: 
+        inc posicionActual
+        mov bx,ax 
+        mov [nombreNivel + bx],"$"
+
+    pop cx 
+    pop bx
+    pop ax 
 endm
